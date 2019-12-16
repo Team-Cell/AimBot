@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdlib.h>
+#include <time.h>
 #include "Physics.h"
 #include "Render.h"
 #include "p2Log.h"
@@ -24,11 +25,18 @@ int main(int argc, char* args[]) {
 	Particle missile;
 	fPoint worm;
 	fPoint target;
+
 	Render render;
+
+	int min_angle = 0;
+	int max_angle = 80;
 
 	float dt = 1.0f;
 	float fps = 30;
 	int Montecarlo = 10;
+
+	Weapon Bazooka(20, 0, true);
+	Weapon Grenade(5, 0.8, false);
 
 	//screen limit rectangles
 	VRectangle rectangles[4];
@@ -43,14 +51,30 @@ int main(int argc, char* args[]) {
 	rectangles[3] = bottom_rectangle;
 
 	render.Init();
+	srand(time(NULL));
 
 	//main loop
 	while (SDL_GetTicks() < 10000)
 	{
 		HandleInput(Montecarlo, worm, target);
-
+		missile.prev_pos = worm;
+		float angle;
 		for (int i = 0; i < Montecarlo; i++)
 		{
+			angle = rand() % 8001;
+			angle *= 0.01;
+			cout << "Angle " << angle << endl;
+			missile.v.x = Bazooka.initial_speed;
+			missile.v.y = angle;
+			missile.pos = Classical_Motion(missile.prev_pos, missile.v, {0, -GRAVITY});
+			cout << "Position: " << missile.pos.x << "," << missile.pos.y << endl;
+			cout << "Velocity: " << missile.v.x << ", " << missile.v.y << endl;
+			/*
+			for (int i = 0; i < 2; i++)
+			{
+				Verlet_Integration(missile.pos, missile.prev_pos, { 0, -GRAVITY }, dt);
+			}
+			*/
 			cout << "Worm: "<< worm.x << "," << worm.y << endl;
 			cout << "Target: " << target.x <<","<< target.y << endl;
 			cout << i + 1 << endl;

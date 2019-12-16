@@ -7,6 +7,17 @@
 #define GRAVITY 9.81
 #define DRAG_COEFFICIENT 1 
 
+struct Weapon {
+	float initial_speed = 0;
+	float bounce_coefficient = 0;
+	bool linear_trajectory = false;
+	Weapon(float init_speed, float boff, bool lin_traj) {
+		initial_speed = init_speed;
+		bounce_coefficient = boff;
+		linear_trajectory = lin_traj;
+	}
+};
+
 struct VRectangle {
 	float x = 0;
 	float y = 0;
@@ -54,7 +65,7 @@ fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt);
 fPoint AccelerationSum(Particle particle);
 
 //position calculators 
-fPoint Classical_Motion(fPoint position, fPoint velocity, fPoint acceleration, float dt = 1.0f);
+fPoint Classical_Motion(fPoint position, fPoint& velocity_and_angle, fPoint acceleration, float dt = 1.0f);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);

@@ -130,8 +130,15 @@ float Freefall_Acceleration(float gravity, float m, float friction_const) {
 
 //position calculators
 
-fPoint Classical_Motion(fPoint position, fPoint velocity, fPoint acceleration, float dt) {
+fPoint Classical_Motion(fPoint position, fPoint& velocity, fPoint acceleration, float dt) {
 	fPoint final_position;
+
+	float module = velocity.x;
+	float angle = velocity.y;
+
+	//CONVERT TO ANGLES
+	velocity.x = module * cos(angle * PI / 180);
+	velocity.y = module * sin(angle * PI / 180);
 
 	final_position.x = position.x + velocity.x * dt + 0.5f * acceleration.x * dt * dt;
 	final_position.y = position.y + velocity.y * dt + 0.5f * acceleration.y * dt * dt;
