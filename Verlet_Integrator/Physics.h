@@ -4,6 +4,8 @@
 #include "p2Point.h"
 
 #define PI 3.1416
+#define GRAVITY 9.81
+#define DRAG_COEFFICIENT 1 
 
 struct VRectangle {
 	float x = 0;
@@ -21,10 +23,10 @@ struct VRectangle {
 	}
 };
 
-class Verlet{
+class Particle{
 public:
-	Verlet();
-	~Verlet();
+	Particle();
+	~Particle();
 public:
 	fPoint	pos;
 	fPoint	prev_pos;
@@ -52,7 +54,7 @@ fPoint Verlet_Acceleration(float m, fPoint total_f);
 //acceleration and velocity
 fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass);
 fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt);
-fPoint AccelerationSum(Verlet particle);
+fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, fPoint velocity, fPoint acceleration, float dt = 1.0f);

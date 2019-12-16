@@ -13,13 +13,17 @@ using namespace std;
 
 #define RECTANGLE_THICKNESS 200
 
+void HandleInput(int& Montecarlo, fPoint& worm, fPoint& target);
+
 int main(int argc, char* args[]) {
 
 	LOG("Starting Integrator");
 
 	bool exit = false;
 
-	Verlet particle;
+	Particle missile;
+	fPoint worm;
+	fPoint target;
 	Render render;
 
 	float dt = 1.0f;
@@ -43,14 +47,26 @@ int main(int argc, char* args[]) {
 	//main loop
 	while (SDL_GetTicks() < 10000)
 	{
-		//Input
+		HandleInput(Montecarlo, worm, target);
+
 		for (int i = 0; i < Montecarlo; i++)
 		{
-		  //Physics
+			cout << "Worm: "<< worm.x << "," << worm.y << endl;
+			cout << "Target: " << target.x <<","<< target.y << endl;
+			cout << i + 1 << endl;
 		}
 		//for
 		//Render
 	}
 	system("pause");
 	return 0;
+}
+
+void HandleInput(int& Montecarlo, fPoint& worm_position, fPoint& target_position) {
+	cout << "Which is the initial position of the Worm?" << endl;
+	cin >> worm_position.x >> worm_position.y;
+	cout << "Which is the target position?" << endl;
+	cin >> target_position.x >> target_position.y;
+	cout << "How many Montecarlo iterations do you want to do? " << endl;
+	cin >> Montecarlo;
 }
