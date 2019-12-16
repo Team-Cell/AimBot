@@ -6,7 +6,7 @@
 #include <math.h>
 using namespace std;
 
-Verlet::Verlet() {
+Particle::Particle() {
 	pos = { 0,0 };
 	prev_pos = { 0,0 };
 	v = { 0,0 };
@@ -20,7 +20,7 @@ Verlet::Verlet() {
 	gravity = 0;
 }
 
-Verlet::~Verlet() {}
+Particle::~Particle() {}
 
 //initial situation of the particle
 
@@ -96,7 +96,7 @@ fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt) {
 	return af;
 }
 
-fPoint AccelerationSum(Verlet particle) {
+fPoint AccelerationSum(Particle particle) {
 	fPoint accelerationSum;
 	if (particle.density != 0)
 	{

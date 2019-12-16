@@ -11,7 +11,7 @@ struct SDL_Texture;
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800
 
-class Render : public Verlet
+class Render : public Particle
 {
 public:
 	Render();
