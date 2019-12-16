@@ -30,6 +30,7 @@ public:
 	fPoint	prev_pos;
 	fPoint	v;
 	fPoint	a;
+	fPoint  wind;
 	float	density;
 	float	area;
 	float	drag_coeficient;
@@ -37,6 +38,8 @@ public:
 	float	mass;
 	int		radius;
 	float	gravity;
+	float	tf;
+	int		fps;
 };
 
 //main verlet
@@ -53,6 +56,8 @@ fPoint AccelerationSum(Verlet particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, fPoint velocity, fPoint acceleration, float dt = 1.0f);
+
+void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);
