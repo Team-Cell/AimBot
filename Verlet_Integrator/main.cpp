@@ -17,21 +17,14 @@ int main(int argc, char* args[]) {
 
 	LOG("Starting Integrator");
 
-	int loop_counter = 0;
-	int max_loops = 40;
-	fPoint temp_pos;
 	bool exit = false;
-	int last_time;
 
 	Verlet particle;
 	Render render;
 
-	int menu_option = 0;
-	int submenu_option = 0;
-
 	float dt = 1.0f;
-	float time = 0;
-	float current_time = 0;
+	float fps = 30;
+	int Montecarlo = 10;
 
 	//screen limit rectangles
 	VRectangle rectangles[4];
@@ -51,13 +44,12 @@ int main(int argc, char* args[]) {
 	while (SDL_GetTicks() < 10000)
 	{
 		//Input
-		
-		//Loop
-		//Montecarlo
-		//Physics
-
+		for (int i = 0; i < Montecarlo; i++)
+		{
+		  //Physics
+		}
+		//for
 		//Render
-
 	}
 	system("pause");
 	return 0;

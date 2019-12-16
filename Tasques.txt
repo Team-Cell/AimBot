@@ -1,0 +1,11 @@
+Input
+Montecarlo
+Càlcul de físiques:
+	- Forces
+	- Acceleració
+	- Colisions
+	  - Mapa
+	  - Target
+	- Posició
+Render
+Report: Tots
