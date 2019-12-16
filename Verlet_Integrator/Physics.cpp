@@ -18,6 +18,9 @@ Particle::Particle() {
 	drag_coeficient = 0;
 	radius = 0;
 	gravity = 0;
+	tf = 5;
+	fps = 30;
+	wind = { 10, 0 };
 }
 
 Particle::~Particle() {}
@@ -169,3 +172,24 @@ float Module(fPoint var) {
 		number_forces--;
 	}
 }*/
+
+//here we calculate inicialize the inicial variables in orther to calculate physics later
+void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density)
+{
+	/*
+	float ff = tf * fps;
+	
+	for ( int i = 1; i < ff; i++)
+	{
+		//compute frame time step
+		dt = 1.0 / fps;
+
+		float Fg = mass * gravity;
+
+		fPoint vw = v - wind;
+		fPoint vu = vw / sqrt(pow(vw.x, 2), pow(vw.y, 2));
+		float Fd = 0.5 * density * vw.x * vw.y *
+
+	}
+	*/
+}
