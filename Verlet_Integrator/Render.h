@@ -1,7 +1,7 @@
-#ifndef __ModuleRenderer_H__
-#define __ModuleRenderer_H__
+#ifndef __Render_H__
+#define __Render_H__
 
-#include "Verlet.h"
+#include "Physics.h"
 #include "SDL/include/SDL.h"
 #include"SDL_image/include/SDL_image.h"
 
@@ -11,13 +11,12 @@ struct SDL_Texture;
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800
 
-class ModuleRender : public Verlet
+class Render : public Verlet
 {
 public:
-	ModuleRender();
-	~ModuleRender();
+	Render();
+	~Render();
 
-	bool Render();
 	void Init();
 	void blit_all(float, float);
 	void Update(fPoint pos);
@@ -40,4 +39,4 @@ public:
 	SDL_Surface *surfacebackground;
 	SDL_Texture * texbackground;
 };
-#endif // !__ModuleRenderer_H__
+#endif // !__Render_H__

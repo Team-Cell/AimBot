@@ -1,5 +1,5 @@
 #include <iostream>
-#include "Verlet.h"
+#include "Physics.h"
 #include "Render.h"
 #include "p2Point.h"
 #include "p2Log.h"
@@ -210,11 +210,6 @@ fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt) {
 
 fPoint AccelerationSum(Verlet particle) {
 	fPoint accelerationSum;
-	//accelerationSum.x = accelerationSum.y = 0;
-	//accelerationSum = particle.a;
-	//accelerationSum += DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass);
-	//accelerationSum.x += DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass).x + Calculate_Acceleration(particle.vi, particle.vf, particle.dt) +
-		//Parachutist_Acceleration(particle.mass, particle.v.y, particle.gravity, particle.k) + Freefall_Acceleration(particle.gravity, particle.mass, particle.drag_coeficient);*/
 	if (particle.density != 0)
 	{
 		accelerationSum.x = DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass).x;
@@ -237,7 +232,6 @@ float Parachutist_Acceleration(float m, fPoint v, float gravity, float k) {
 	float acceleration;
 
 	// k: constant based on falling object form
-
 	acceleration = (-m * gravity + k * v.y * v.y) / m;
 
 	return acceleration;

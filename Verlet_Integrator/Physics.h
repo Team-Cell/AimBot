@@ -1,5 +1,5 @@
-#ifndef _VERLET_H_
-#define _VERLET_H_
+#ifndef _PHYSICS_H_
+#define _PHYSICS_H_
 #include <math.h>
 #include "p2Point.h"
 
@@ -10,6 +10,7 @@ struct VRectangle {
 	float y = 0;
 	float w = 0;
 	float h = 0;
+
 	VRectangle(){};
 	~VRectangle() {};
 	VRectangle(float u_x, float u_y, float u_w, float u_h){
@@ -25,17 +26,17 @@ public:
 	Verlet();
 	~Verlet();
 public:
-	fPoint pos;
-	fPoint prev_pos;
-	fPoint v;
-	fPoint a;
-	float density;
-	float area;
-	float drag_coeficient;
-	float dt;
-	float mass;
-	int radius;
-	float gravity;
+	fPoint	pos;
+	fPoint	prev_pos;
+	fPoint	v;
+	fPoint	a;
+	float	density;
+	float	area;
+	float	drag_coeficient;
+	float	dt;
+	float	mass;
+	int		radius;
+	float	gravity;
 };
 
 void InitialSituation(Verlet &particle, float dt);
@@ -74,6 +75,6 @@ float Flight_Time(fPoint vi, float gravity);
 fPoint Forces_Sum(fPoint f1, fPoint f2);
 float Module(fPoint var);
 
-#endif // !_VERLET_H_
+#endif // !_PHYSICS_H_
 
 

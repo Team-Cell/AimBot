@@ -127,13 +127,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="p2Log.cpp" />
     <ClCompile Include="Render.cpp" />
-    <ClCompile Include="Verlet.cpp" />
+    <ClCompile Include="Physics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="p2Log.h" />
     <ClInclude Include="p2Point.h" />
     <ClInclude Include="Render.h" />
-    <ClInclude Include="Verlet.h" />
+    <ClInclude Include="Physics.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

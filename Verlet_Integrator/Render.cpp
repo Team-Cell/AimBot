@@ -1,9 +1,9 @@
 #include "Render.h"
-#include "Verlet.h"
+#include "Physics.h"
 #include "p2Log.h"
 
 
-ModuleRender::ModuleRender() {
+Render::Render() {
 	ball = nullptr;
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO);
 
@@ -11,14 +11,9 @@ ModuleRender::ModuleRender() {
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 }
-ModuleRender::~ModuleRender() {}
+Render::~Render() {}
 
-bool ModuleRender::Render() {
-
-	return true;
-}
-
-void ModuleRender::Init() {
+void Render::Init() {
 
 	SDL_RenderClear(renderer);
 
@@ -43,16 +38,14 @@ void ModuleRender::Init() {
 	SDL_FreeSurface(particle_surface);
 }
 
-void ModuleRender::blit_all(float x_ball, float y_ball) {
+void Render::blit_all(float x_ball, float y_ball) {
 	particle_rect.x = x_ball;
 	particle_rect.y = y_ball;
 	SDL_RenderPresent(renderer);
 	SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
-	//SDL_Delay(30);
 }
 
-void ModuleRender::Update(fPoint position) {
-	//TODO 2:Make the previous ball disappear
+void Render::Update(fPoint position) {
 	
 	SDL_RenderCopy(renderer, texbackground, NULL, &backgroundrect);
 	particle_rect.x = position.x;
@@ -60,9 +53,8 @@ void ModuleRender::Update(fPoint position) {
 	
 	SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
 	SDL_RenderPresent(renderer);
-	//SDL_Delay(500);
 }
 
-void ModuleRender::clearScreen() {
+void Render::clearScreen() {
 	SDL_RenderClear(renderer);
 }
