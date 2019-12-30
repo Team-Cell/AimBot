@@ -33,7 +33,9 @@ int main(int argc, char* args[]) {
 
 	float dt = 1.0f;
 	float fps = 30;
+
 	int Montecarlo = 10;
+	int max_path_iterations = 50;
 
 	Weapon Bazooka(20, 0, true);
 	Weapon Grenade(5, 0.8, false);
@@ -44,6 +46,7 @@ int main(int argc, char* args[]) {
 	VRectangle left_rectangle(-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS,SCREEN_HEIGHT);
 	VRectangle right_rectangle(SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT);
 	VRectangle bottom_rectangle(-RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2*RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
+	//VRectangle target;
 
 	rectangles[0] = top_rectangle;
 	rectangles[1] = left_rectangle;
@@ -54,7 +57,7 @@ int main(int argc, char* args[]) {
 	srand(time(NULL));
 
 	//main loop
-	while (SDL_GetTicks() < 10000)
+	while (exit == false)
 	{
 		HandleInput(Montecarlo, worm, target);
 		missile.prev_pos = worm;
@@ -69,17 +72,20 @@ int main(int argc, char* args[]) {
 			missile.pos = Classical_Motion(missile.prev_pos, missile.v, {0, -GRAVITY});
 			cout << "Position: " << missile.pos.x << "," << missile.pos.y << endl;
 			cout << "Velocity: " << missile.v.x << ", " << missile.v.y << endl;
-			/*
-			for (int i = 0; i < 2; i++)
+			
+			for (int i = 0; i < max_path_iterations; i++)
 			{
+				//add speed calculations
 				Verlet_Integration(missile.pos, missile.prev_pos, { 0, -GRAVITY }, dt);
+				//check collisions
 			}
-			*/
+
+			cout << i + 1 << endl;
 			cout << "Worm: "<< worm.x << "," << worm.y << endl;
 			cout << "Target: " << target.x <<","<< target.y << endl;
-			cout << i + 1 << endl;
 		}
-		//for
+
+		//for of the final path
 		//Render
 	}
 	system("pause");

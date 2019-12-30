@@ -26,6 +26,7 @@ struct VRectangle {
 
 	VRectangle(){};
 	~VRectangle() {};
+
 	VRectangle(float u_x, float u_y, float u_w, float u_h){
 		x = u_x;
 		y = u_y;
@@ -61,7 +62,6 @@ fPoint Velocity_Verlet(fPoint vi, fPoint ai, fPoint a_new, float dt);
 fPoint Stormer_Verlet(fPoint pos, fPoint pos_new, fPoint a, float dt);
 fPoint Verlet_Acceleration(float m, fPoint total_f);
 
-
 //acceleration and velocity
 fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass);
 fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt);
@@ -71,6 +71,7 @@ fPoint AccelerationSum(Particle particle);
 fPoint Classical_Motion(fPoint position, fPoint& velocity_and_angle, fPoint acceleration, float dt = 1.0f);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
+bool OnCollision(Particle particle, VRectangle rectangle);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);

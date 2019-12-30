@@ -193,3 +193,10 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 	}
 	*/
 }
+
+bool OnCollision(Particle particle, VRectangle rectangle) {
+	return (particle.pos.x < rectangle.x + rectangle.w &&
+		particle.pos.x + particle.radius > rectangle.x &&
+		particle.pos.y < rectangle.y + rectangle.h &&
+		particle.radius + particle.pos.y > rectangle.y);
+}
