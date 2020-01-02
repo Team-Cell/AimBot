@@ -16,7 +16,7 @@ Particle::Particle() {
 	dt = 1;
 	mass = 0;
 	drag_coeficient = 0;
-	radius = 0;
+	radius = 0.2;
 	gravity = 0;
 	tf = 5;
 	fps = 30;
@@ -133,15 +133,13 @@ float Freefall_Acceleration(float gravity, float m, float friction_const) {
 
 //position calculators
 
-fPoint Classical_Motion(fPoint position, fPoint& velocity, fPoint acceleration, float dt) {
+fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, float dt) {
 	fPoint final_position;
-
-	float module = velocity.x;
-	float angle = velocity.y;
+	fPoint velocity;
 
 	//CONVERT TO ANGLES
-	velocity.x = module * cos(angle * PI / 180);
-	velocity.y = module * sin(angle * PI / 180);
+	velocity.x = initial_velocity * cos(angle * PI / 180);
+	velocity.y = initial_velocity * sin(angle * PI / 180);
 
 	final_position.x = position.x + velocity.x * dt + 0.5f * acceleration.x * dt * dt;
 	final_position.y = position.y + velocity.y * dt + 0.5f * acceleration.y * dt * dt;
@@ -198,5 +196,12 @@ bool OnCollision(Particle particle, VRectangle rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
 		particle.pos.x + particle.radius > rectangle.x &&
 		particle.pos.y < rectangle.y + rectangle.h &&
-		particle.radius + particle.pos.y > rectangle.y);
+		 particle.pos.y + particle.radius > rectangle.y);
+}
+
+bool OnCollision(Particle projectile, Particle target) {
+	return (projectile.pos.x < target.pos.x + target.radius &&
+		projectile.pos.x + projectile.radius > target.pos.x &&
+		projectile.pos.y < target.pos.y + target.radius &&
+		projectile.pos.y + projectile.radius > target.pos.y);
 }

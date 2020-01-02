@@ -68,10 +68,11 @@ fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt);
 fPoint AccelerationSum(Particle particle);
 
 //position calculators 
-fPoint Classical_Motion(fPoint position, fPoint& velocity_and_angle, fPoint acceleration, float dt = 1.0f);
+fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, float dt = 1.0f);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 bool OnCollision(Particle particle, VRectangle rectangle);
+bool OnCollision(Particle projectile, Particle target);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);

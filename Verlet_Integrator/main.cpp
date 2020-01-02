@@ -14,7 +14,7 @@ using namespace std;
 
 #define RECTANGLE_THICKNESS 200
 
-void HandleInput(int& Montecarlo, fPoint& worm, fPoint& target);
+void HandleInput(int& Montecarlo, fPoint& worm, Particle& target);
 
 int main(int argc, char* args[]) {
 
@@ -22,9 +22,9 @@ int main(int argc, char* args[]) {
 
 	bool exit = false;
 
-	Particle missile;
+	Particle projectile;
+	Particle target;
 	fPoint worm;
-	fPoint target;
 
 	Render render;
 
@@ -60,29 +60,42 @@ int main(int argc, char* args[]) {
 	while (exit == false)
 	{
 		HandleInput(Montecarlo, worm, target);
-		missile.prev_pos = worm;
 		float angle;
 		for (int i = 0; i < Montecarlo; i++)
 		{
+			NEXT_MISSILE: cout << "Missile: " << i + 1 << endl;
+			projectile.prev_pos = worm;
 			angle = rand() % 8001;
 			angle *= 0.01;
 			cout << "Angle " << angle << endl;
-			missile.v.x = Bazooka.initial_speed;
-			missile.v.y = angle;
-			missile.pos = Classical_Motion(missile.prev_pos, missile.v, {0, -GRAVITY});
-			cout << "Position: " << missile.pos.x << "," << missile.pos.y << endl;
-			cout << "Velocity: " << missile.v.x << ", " << missile.v.y << endl;
+
+			//Test projectile is a bazooka so no gravity is applied to it
+			projectile.pos = Classical_Motion(projectile.prev_pos, Bazooka.initial_speed, angle, {0, 0});
 			
 			for (int i = 0; i < max_path_iterations; i++)
 			{
 				//add speed calculations
-				Verlet_Integration(missile.pos, missile.prev_pos, { 0, -GRAVITY }, dt);
-				//check collisions
-			}
+				fPoint temp = projectile.pos;
+				projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, { 0, 0 }, dt);
+				cout << "Position x:" << projectile.pos.x << " y: " << projectile.pos.y << endl;
+				projectile.prev_pos = temp;
 
-			cout << i + 1 << endl;
-			cout << "Worm: "<< worm.x << "," << worm.y << endl;
-			cout << "Target: " << target.x <<","<< target.y << endl;
+				for (int j = 0; j < 4; j++)
+				{
+					if (OnCollision(projectile, rectangles[i])) {
+						cout << "Collision" << endl;
+						i++;
+						goto NEXT_MISSILE;
+					}
+				}
+
+				if (OnCollision(projectile, target)) {
+					cout << "Collision" << endl;
+					i++;
+					goto NEXT_MISSILE;
+				}
+			}
+			cout << endl;
 		}
 
 		//for of the final path
@@ -92,11 +105,11 @@ int main(int argc, char* args[]) {
 	return 0;
 }
 
-void HandleInput(int& Montecarlo, fPoint& worm_position, fPoint& target_position) {
+void HandleInput(int& Montecarlo, fPoint& worm_position, Particle& target) {
 	cout << "Which is the initial position of the Worm?" << endl;
 	cin >> worm_position.x >> worm_position.y;
 	cout << "Which is the target position?" << endl;
-	cin >> target_position.x >> target_position.y;
+	cin >> target.pos.x >> target.pos.y;
 	cout << "How many Montecarlo iterations do you want to do? " << endl;
 	cin >> Montecarlo;
 }
