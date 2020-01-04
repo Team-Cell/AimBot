@@ -99,13 +99,25 @@ fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt) {
 	return af;
 }
 
+fPoint Calculate_Acceleration(fPoint force, float mass) {
+
+	fPoint af;
+
+	af.x = force.x / mass;
+	af.y = force.y / mass;
+
+	return af;
+}
+
 fPoint AccelerationSum(Particle particle) {
 	fPoint accelerationSum;
 	if (particle.density != 0)
 	{
 		accelerationSum.x = DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass).x;
-		accelerationSum.y = particle.gravity + DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass).y;/* +Freefall_Acceleration(particle.gravity, particle.mass, particle.drag_coeficient) /*+ Parachutist_Acceleration(particle.mass, particle.v.y, particle.gravity, particle.k)*/;
-
+		accelerationSum.y = particle.gravity + DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass).y;
+		/* +Freefall_Acceleration(particle.gravity, particle.mass, particle.drag_coeficient) /*+ Parachutist_Acceleration(particle.mass, particle.v.y, particle.gravity, particle.k)*/;
+		/*To calculate gravitational acceleration we can use the new function of calculate acceleration with the force being the gravity and the mass the bullet's mass (it could
+		change depending of the weapon used)*/
 	}
 	else
 	{
