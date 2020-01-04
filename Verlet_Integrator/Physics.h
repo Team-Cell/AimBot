@@ -39,12 +39,14 @@ class Particle{
 public:
 	Particle();
 	~Particle();
+
 public:
 	fPoint	pos;
 	fPoint	prev_pos;
 	fPoint	v;
 	fPoint	a;
 	fPoint  wind;
+
 	float	density;
 	float	area;
 	float	drag_coeficient;

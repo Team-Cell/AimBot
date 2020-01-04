@@ -78,8 +78,6 @@ fPoint Verlet_Acceleration(float m, fPoint total_f) {
 	return a_new;
 }
 
-//we can now if a body is colliding checking all the cases in which it doesn't collide
-
 //acceleration and velocity
 
 fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass) {
