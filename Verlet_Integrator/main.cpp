@@ -79,7 +79,7 @@ int main(int argc, char* args[]) {
 
 			//Test projectile is a bazooka so no gravity is applied to it
 			projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
-
+			
 			for (int i = 0; i < max_path_iterations; i++)
 			{
 				//add speed calculations
@@ -102,12 +102,13 @@ int main(int argc, char* args[]) {
 					final_angle = angle;
 					i++;
 				}
-			}
 
+				render.blit_all(projectile.pos, worm, target.pos, option);
+			}
 			cout << endl;
 		}
 		option = 0;
-
+		render.clearScreen();
 		//render final path
 		if (final_angle != 0) {
 			//Render

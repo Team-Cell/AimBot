@@ -18,7 +18,7 @@ public:
 	~Render();
 
 	void Init();
-	void blit_all(float, float);
+	void blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actual_weapon);
 	void Update(fPoint pos);
 	void clearScreen();
 
@@ -30,11 +30,29 @@ public:
 	SDL_Rect* ball;
 	SDL_Texture* tex = nullptr;
 
-	//All Ball Propeties to Render
+	//Players Surfaces & Textures
+	SDL_Rect player1_rect;
+	SDL_Rect player2_rect;
+	SDL_Surface *player1_surface;
+	SDL_Texture * player1_tex;
+	SDL_Surface *player2_surface;
+	SDL_Texture * player2_tex;
+
+	//Weapons Surfaces & Textures
+	SDL_Rect bazooka_rect;
+	SDL_Surface *bazooka_surface;
+	SDL_Texture *bazooka_tex;
+
+	//Particle Surfaces & Textures
 	SDL_Rect particle_rect;
 	SDL_Surface *particle_surface;
-	SDL_Texture * particle_tex;
+	SDL_Texture *particle_tex;
+	SDL_Surface *cell_surface;
+	SDL_Texture *cell_tex;
+	SDL_Surface *grenade_surface;
+	SDL_Texture *grenade_tex;
 
+	//Background Surfaces & Textures
 	SDL_Rect backgroundrect;
 	SDL_Surface *surfacebackground;
 	SDL_Texture * texbackground;
