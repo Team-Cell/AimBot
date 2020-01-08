@@ -16,7 +16,8 @@ Particle::Particle() {
 	dt = 1;
 	mass = 0;
 	drag_coeficient = 0;
-	radius = 0.2;
+	w = 32;
+	h = 32;
 	gravity = 0;
 	tf = 5;
 	fps = 30;
@@ -204,14 +205,14 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 
 bool OnCollision(Particle particle, VRectangle rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
-		particle.pos.x + particle.radius > rectangle.x &&
+		particle.pos.x + particle.w > rectangle.x &&
 		particle.pos.y < rectangle.y + rectangle.h &&
-		 particle.pos.y + particle.radius > rectangle.y);
+		 particle.pos.y + particle.h > rectangle.y);
 }
 
 bool OnCollision(Particle projectile, Particle target) {
-	return (projectile.pos.x < target.pos.x + target.radius &&
-		projectile.pos.x + projectile.radius > target.pos.x &&
-		projectile.pos.y < target.pos.y + target.radius &&
-		projectile.pos.y + projectile.radius > target.pos.y);
+	return (projectile.pos.x < target.pos.x + target.w &&
+		projectile.pos.x + projectile.w > target.pos.x &&
+		projectile.pos.y < target.pos.y + target.h &&
+		projectile.pos.y + projectile.h > target.pos.y);
 }
