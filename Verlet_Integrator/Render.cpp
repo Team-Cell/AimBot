@@ -31,6 +31,8 @@ Render::Render() {
 	bazooka_rect.w = 62;
 	bazooka_rect.h = 31;
 
+	center.x = 31;
+	center.y = 15;
 }
 Render::~Render() {}
 
@@ -78,7 +80,7 @@ void Render::Init() {
 	SDL_RenderPresent(renderer);
 }
 
-void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actualweapon) {
+void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actualweapon, float angle) {
 
 	////////// PLAYERS BLIT //////////////
 	player1_rect.x = pos_player1.x;
@@ -94,9 +96,10 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 	particle_rect.x = pos_proyectile.x;
 	particle_rect.y = SCREEN_HEIGHT - (pos_proyectile.y + 15);
 
-	SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
+
 	SDL_RenderCopy(renderer, player1_tex, NULL, &player1_rect);
 	SDL_RenderCopy(renderer, player2_tex, NULL, &player2_rect);
+	SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
 
 	////////// CHECK WHAT WEAPON IS USING //////////////
 	if (actualweapon == 1) {
@@ -104,11 +107,14 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 	}
 	if (actualweapon == 2) {
 		particle_tex = cell_tex;
-		SDL_RenderCopy(renderer, bazooka_tex, NULL, &bazooka_rect);
+		SDL_RenderCopyEx(renderer, bazooka_tex, NULL, &bazooka_rect, -angle,&center, SDL_FLIP_NONE);
 	}
+
 
 	////////// RENDER //////////////
 	SDL_RenderPresent(renderer);
+
+	
 }
 
 void Render::Update(fPoint position) {

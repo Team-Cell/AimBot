@@ -18,9 +18,10 @@ public:
 	~Render();
 
 	void Init();
-	void blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actual_weapon);
+	void blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actual_weapon, float angle);
 	void Update(fPoint pos);
 	void clearScreen();
+	SDL_Point center;
 
 public:
 	SDL_Window *window;

@@ -71,7 +71,8 @@ int main(int argc, char* args[]) {
 		for (int i = 0; i < Montecarlo; i++)
 		{
 		cout << "Missile: " << i + 1 << endl;
-			projectile.prev_pos = worm;
+			projectile.prev_pos.x = worm.x +5;
+			projectile.prev_pos.y = worm.y - 30;
 			angle = rand() % max_angle * 100 + 1;
 			angle *= 0.01;
 
@@ -103,7 +104,7 @@ int main(int argc, char* args[]) {
 					i++;
 				}
 
-				render.blit_all(projectile.pos, worm, target.pos, option);
+				render.blit_all(projectile.pos, worm, target.pos, option, angle);
 			}
 			cout << endl;
 		}
