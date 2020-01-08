@@ -38,6 +38,7 @@ int main(int argc, char* args[]) {
 	float fps = 30;
 
 	int Montecarlo = 10;
+	int Montecarlo_iterations = 0;
 	int max_path_iterations = 50;
 
 	Weapon Grenade(5, 0.8, false);
@@ -68,51 +69,77 @@ int main(int argc, char* args[]) {
 
 		float angle;
 
-		for (int i = 0; i < Montecarlo; i++)
-		{
-		cout << "Missile: " << i + 1 << endl;
-			projectile.prev_pos = worm;
-			angle = rand() % max_angle * 100 + 1;
-			angle *= 0.01;
+		while (final_angle == 0) {
+			Montecarlo_iterations++;
+			cout << "Montecarlo n " << Montecarlo_iterations << endl;
+			for (int i = 0; i < Montecarlo && (final_angle == 0); i++){
+			cout << "Missile: " << i + 1 << endl;
+				projectile.prev_pos = worm;
+				angle = rand() % max_angle * 100 + 1;
+				angle *= 0.01;
 
-			cout << "Angle " << angle << endl;
+				cout << "Angle " << angle << endl;
 
-			//Test projectile is a bazooka so no gravity is applied to it
-			projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
+				//Test projectile is a bazooka so no gravity is applied to it
+				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
 			
-			for (int i = 0; i < max_path_iterations; i++)
-			{
-				//add speed calculations
-				fPoint temp = projectile.pos;
-				projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, { 0, 0 }, dt);
-				cout << "Position x:" << projectile.pos.x << " y: " << projectile.pos.y << endl;
-				projectile.prev_pos = temp;
-
-				for (int j = 0; j < 4; j++)
+				for (int i = 0; i < max_path_iterations; i++)
 				{
-					if (OnCollision(projectile, rectangles[i])) {
-						cout << "Collision" << endl;
+					//add speed calculations
+					fPoint temp = projectile.pos;
+					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, { 0, 0 }, dt);
+					//cout << "Position x:" << projectile.pos.x << " y: " << projectile.pos.y << endl;
+					projectile.prev_pos = temp;
+
+					for (int j = 0; j < 4; j++)
+					{
+						if (OnCollision(projectile, rectangles[j])) {
+							i++;
+							break;
+						}
+					}
+
+					if (OnCollision(projectile, target)) {
+						cout << "Target hit" << endl;
+						final_angle = angle;
 						i++;
 						break;
 					}
-				}
 
-				if (OnCollision(projectile, target)) {
-					cout << "Collision" << endl;
-					final_angle = angle;
-					i++;
+					//render.blit_all(projectile.pos, worm, target.pos, option);
 				}
-
-				render.blit_all(projectile.pos, worm, target.pos, option);
+				cout << endl;
 			}
-			cout << endl;
+			cout << "=====================" << endl << endl;
 		}
+
+		//render bazzoka final path
+		projectile.prev_pos = worm;
+		angle = final_angle;
+
+		cout << "Final angle " << angle << endl;
+
+		projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
+
+		for (int i = 0; i < max_path_iterations; i++)
+		{
+			//add speed calculations
+			fPoint temp = projectile.pos;
+			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, { 0, 0 }, dt);
+			projectile.prev_pos = temp;
+
+			if (OnCollision(projectile, target)) {
+				final_angle = angle;
+				i++;
+				break;
+			}
+
+			render.blit_all(projectile.pos, worm, target.pos, option);
+		}
+		cout << endl;
+		final_angle = 0;
 		option = 0;
 		render.clearScreen();
-		//render final path
-		if (final_angle != 0) {
-			//Render
-		}
 	}
 	system("pause");
 	return 0;
@@ -128,4 +155,6 @@ void HandleInput(int& option, int& Montecarlo, fPoint& worm_position, Particle& 
 	cin >> target.pos.x >> target.pos.y;
 	cout << "How many Montecarlo iterations do you want to do? " << endl;
 	cin >> Montecarlo;
+	cout << endl;
+	cout << "=====================" << endl << endl;
 }

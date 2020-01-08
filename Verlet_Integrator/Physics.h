@@ -52,7 +52,8 @@ public:
 	float	drag_coeficient;
 	float	dt;
 	float	mass;
-	int		radius;
+	int		w;
+	int		h;
 	float	gravity;
 	float	tf;
 	int		fps;
