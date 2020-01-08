@@ -77,8 +77,10 @@ int main(int argc, char* args[]) {
 
 			cout << "Angle " << angle << endl;
 
-			//Test projectile is a bazooka so no gravity is applied to it
-			projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
+			if(chosen_weapon == &Grenade)
+				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 }, true);
+			if (chosen_weapon == &Bazooka)
+				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 }, false);
 			
 			for (int i = 0; i < max_path_iterations; i++)
 			{
