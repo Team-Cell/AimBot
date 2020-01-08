@@ -4,6 +4,7 @@
 #include "Physics.h"
 #include "SDL/include/SDL.h"
 #include"SDL_image/include/SDL_image.h"
+#include "Animation.h"
 
 struct SDL_Renderer;
 struct SDL_Texture;
@@ -26,6 +27,7 @@ public:
 public:
 	SDL_Window *window;
 	//SDL_Renderer *renderer;
+	Animation idle_animation;
 
 	SDL_Renderer* renderer = nullptr;
 	SDL_Rect* ball;

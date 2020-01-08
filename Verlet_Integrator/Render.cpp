@@ -33,6 +33,30 @@ Render::Render() {
 
 	center.x = 31;
 	center.y = 15;
+
+	/////IDLE ANIMATION//////
+	idle_animation.PushBack({ 0, 0, 66, 75 });
+	idle_animation.PushBack({ 66, 0, 66, 75 });
+	idle_animation.PushBack({ 132, 0, 66, 75 });
+	idle_animation.PushBack({ 198, 0, 66, 75 });
+	idle_animation.PushBack({ 264, 0, 66, 75 });
+	idle_animation.PushBack({ 330, 0, 66, 75 });
+	idle_animation.PushBack({ 396, 0, 66, 75 });
+	idle_animation.PushBack({ 462, 0, 66, 75 });
+	idle_animation.PushBack({ 528, 0, 66, 75 });
+	idle_animation.PushBack({ 594, 0, 66, 75 });
+	idle_animation.PushBack({ 0, 75, 66, 75 });
+	idle_animation.PushBack({ 66, 75, 66, 75 });
+	idle_animation.PushBack({ 132, 75, 66, 75 });
+	idle_animation.PushBack({ 198, 75, 66, 75 });
+	idle_animation.PushBack({ 264, 75, 66, 75 });
+	idle_animation.PushBack({ 330, 75, 66, 75 });
+	idle_animation.PushBack({ 396, 75, 66, 75 });
+	idle_animation.PushBack({ 462, 75, 66, 75 });
+	idle_animation.PushBack({ 528, 75, 66, 75 });
+	idle_animation.PushBack({ 594, 75, 66, 75 });
+	idle_animation.speed = 0.07f;
+
 }
 Render::~Render() {}
 
@@ -58,12 +82,12 @@ void Render::Init() {
 	particle_tex = cell_tex;
 
 	//// PLAYER 1 GRAPHICS INIT ////
-	player1_surface = IMG_Load("Assets/Player1.png");
+	player1_surface = IMG_Load("Assets/NewPlayer1.png");
 	player1_tex = SDL_CreateTextureFromSurface(renderer, player1_surface);
 	SDL_FreeSurface(player1_surface);
 
 	//// PLAYER 2 GRAPHICS INIT ////
-	player2_surface = IMG_Load("Assets/Player2.png");
+	player2_surface = IMG_Load("Assets/NewPlayer2.png");
 	player2_tex = SDL_CreateTextureFromSurface(renderer, player2_surface);
 	SDL_FreeSurface(player2_surface);
 
@@ -97,8 +121,8 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 	particle_rect.y = SCREEN_HEIGHT - (pos_proyectile.y + 15);
 
 
-	SDL_RenderCopy(renderer, player1_tex, NULL, &player1_rect);
-	SDL_RenderCopy(renderer, player2_tex, NULL, &player2_rect);
+	SDL_RenderCopyEx(renderer, player1_tex, &(idle_animation.GetCurrentFrame()), &player1_rect, 0, 0, SDL_FLIP_HORIZONTAL);
+	SDL_RenderCopyEx(renderer, player2_tex, &(idle_animation.GetCurrentFrame()), &player2_rect, 0, 0, SDL_FLIP_NONE);
 	SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
 
 	////////// CHECK WHAT WEAPON IS USING //////////////
@@ -107,14 +131,11 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 	}
 	if (actualweapon == 2) {
 		particle_tex = cell_tex;
-		SDL_RenderCopyEx(renderer, bazooka_tex, NULL, &bazooka_rect, -angle,&center, SDL_FLIP_NONE);
+		SDL_RenderCopyEx(renderer, bazooka_tex, NULL, &bazooka_rect, -angle,&center, SDL_FLIP_HORIZONTAL);
 	}
-
 
 	////////// RENDER //////////////
 	SDL_RenderPresent(renderer);
-
-	
 }
 
 void Render::Update(fPoint position) {
