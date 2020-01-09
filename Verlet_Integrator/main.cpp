@@ -70,6 +70,9 @@ int main(int argc, char* args[]) {
 		if (chosen_weapon->wind_activated == true) {
 			a.x -= 0.5;
 		}
+		if (chosen_weapon->linear_trajectory == false) {
+			a.y -= 0.5;
+		}
 		float angle;
 
 		while (final_angle == 0) {
@@ -90,7 +93,7 @@ int main(int argc, char* args[]) {
 				//projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
 
 				if (chosen_weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, true);
+					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
 				if (chosen_weapon == &Bazooka)
 					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
 				for (int i = 0; i < max_path_iterations; i++)
