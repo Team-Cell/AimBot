@@ -32,6 +32,8 @@ int main(int argc, char* args[]) {
 	int min_angle = 0;
 	int max_angle = 80;
 
+	float wind_acceleration = 0.2;
+
 	float final_angle = 0;
 
 	float dt = 1.0f;
@@ -41,7 +43,7 @@ int main(int argc, char* args[]) {
 	int Montecarlo_iterations = 0;
 	int max_path_iterations = 50;
 
-	Weapon Grenade(40, 0.6, false, true);
+	Weapon Grenade(20, 0.6, false, true);
 	Weapon Bazooka(20, 0, true, false);
 	Weapon* chosen_weapon = nullptr;
 
@@ -66,6 +68,7 @@ int main(int argc, char* args[]) {
 		HandleInput(option, Montecarlo, worm, target);
 		if (option == 1) chosen_weapon = &Grenade;
 		if (option == 2) chosen_weapon = &Bazooka;
+
 		fPoint a = { 0,0 };
 		if (chosen_weapon->wind_activated == true) {
 			a = AddWind(a);
@@ -177,7 +180,7 @@ int main(int argc, char* args[]) {
 
 		render.clearScreen();
 	}
-	
+
 	system("pause");
 	return 0;
 }
