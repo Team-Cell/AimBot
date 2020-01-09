@@ -68,7 +68,7 @@ fPoint Stormer_Verlet(fPoint pos, fPoint pos_new, fPoint a, float dt);
 fPoint Verlet_Acceleration(float m, fPoint total_f);
 
 //acceleration and velocity
-fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass);
+fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass, float wind);
 fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt);
 fPoint Calculate_Acceleration(fPoint force, float mass);
 fPoint AccelerationSum(Particle particle);
