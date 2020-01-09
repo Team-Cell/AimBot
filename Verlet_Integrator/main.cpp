@@ -68,10 +68,10 @@ int main(int argc, char* args[]) {
 		if (option == 2) chosen_weapon = &Bazooka;
 		fPoint a = { 0,0 };
 		if (chosen_weapon->wind_activated == true) {
-			a.x -= 0.5;
+			a = AddWind(a);
 		}
 		if (chosen_weapon->linear_trajectory == false) {
-			a.y -= 0.5;
+			a = AddGravity(a);
 		}
 		float angle;
 

@@ -275,3 +275,11 @@ if ((particle.v.y < 0) && (particle.pos.x > rect.x) && particle.pos.x < rect.x +
 
 	//coming from right
 */
+fPoint AddWind(fPoint a) {
+	a.x -= 0.5;
+	return a;
+}
+fPoint AddGravity(fPoint a) {
+	a.y -= 0.5;
+	return a;
+}
