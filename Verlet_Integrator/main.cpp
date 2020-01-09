@@ -41,7 +41,7 @@ int main(int argc, char* args[]) {
 	int Montecarlo_iterations = 0;
 	int max_path_iterations = 50;
 
-	Weapon Grenade(5, 0.8, false);
+	Weapon Grenade(40, 0.6, false);
 	Weapon Bazooka(20, 0, true);
 	Weapon* chosen_weapon = nullptr;
 
@@ -72,8 +72,9 @@ int main(int argc, char* args[]) {
 		while (final_angle == 0) {
 			Montecarlo_iterations++;
 			cout << "Montecarlo n " << Montecarlo_iterations << endl;
-			for (int i = 0; i < Montecarlo; i++)
-			{
+
+			for (int i = 0; i < Montecarlo && (final_angle == 0); i++) {
+
 				cout << "Missile: " << i + 1 << endl;
 				projectile.prev_pos.x = worm.x + 5;
 				projectile.prev_pos.y = worm.y - 30;
@@ -98,13 +99,11 @@ int main(int argc, char* args[]) {
 						if (OnCollision(projectile, rectangles[j])) {
 							if (chosen_weapon->bounce_coefficient == 0)
 							{
-								//HandleCollision(projectile, rectangles[j], dt);
-								i++;
-								break;
+
 							}
 							else
 							{
-								HandleCollision(projectile, rectangles[j], dt);
+								HandleCollision(projectile, rectangles[j], dt, chosen_weapon->bounce_coefficient);
 							}
 						}
 					}
@@ -113,6 +112,7 @@ int main(int argc, char* args[]) {
 						cout << "Target hit" << endl;
 						final_angle = angle;
 						i++;
+						break;
 					}
 
 					render.blit_all(projectile.pos, worm, target.pos, option, angle);
@@ -138,8 +138,6 @@ int main(int argc, char* args[]) {
 			projectile.prev_pos = temp;
 
 			if (OnCollision(projectile, target)) {
-				final_angle = angle;
-				i++;
 				break;
 			}
 

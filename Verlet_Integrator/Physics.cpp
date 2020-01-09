@@ -218,7 +218,7 @@ bool OnCollision(Particle projectile, Particle target) {
 		projectile.pos.y + projectile.h > target.pos.y);
 }
 
-void HandleCollision(Particle& particle, VRectangle rect, float dt) {
+void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce_coefficient) {
 	int COLLIDER_MARGIN = 10;
 	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;
@@ -229,12 +229,12 @@ void HandleCollision(Particle& particle, VRectangle rect, float dt) {
 		//colliding with the floor
 		if (particle.pos.y < rect.y + COLLIDER_MARGIN)
 		{
-			particle.v.y = -particle.v.y;
+			particle.v.y = -particle.v.y * bounce_coefficient;
 		}
 		//colliding with one of the two walls
 		else
 		{
-			particle.v.x = -particle.v.x;
+			particle.v.x = -particle.v.x * bounce_coefficient;
 		}
 	}
 
@@ -244,12 +244,12 @@ void HandleCollision(Particle& particle, VRectangle rect, float dt) {
 		//colliding with ceiling
 		if (particle.pos.y < rect.y + rect.h - COLLIDER_MARGIN)
 		{
-			particle.v.y = -particle.v.y;
+			particle.v.y = -particle.v.y * bounce_coefficient;
 		}
 		//colliding with one of the two walls
 		else
 		{
-			particle.v.x = -particle.v.x;
+			particle.v.x = -particle.v.x * bounce_coefficient;
 		}
 	}
 

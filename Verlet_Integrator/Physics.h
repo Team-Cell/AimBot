@@ -79,7 +79,7 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 //collisions
 bool OnCollision(Particle particle, VRectangle rectangle);
 bool OnCollision(Particle projectile, Particle target);
-void HandleCollision(Particle& particle, VRectangle rect, float dt);
+void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce_coefficient);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);
