@@ -11,9 +11,9 @@ struct Weapon {
 	float initial_speed = 0;
 	float bounce_coefficient = 0;
 	bool linear_trajectory = false;
-	Weapon(float init_speed, float boff, bool lin_traj) {
+	Weapon(float init_speed, float bounce_coeff, bool lin_traj) {
 		initial_speed = init_speed;
-		bounce_coefficient = boff;
+		bounce_coefficient = bounce_coeff;
 		linear_trajectory = lin_traj;
 	}
 };
@@ -75,8 +75,11 @@ fPoint AccelerationSum(Particle particle);
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, float dt = 1.0f);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
+
+//collisions
 bool OnCollision(Particle particle, VRectangle rectangle);
 bool OnCollision(Particle projectile, Particle target);
+void HandleCollision(Particle& particle, VRectangle rect, float dt);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);

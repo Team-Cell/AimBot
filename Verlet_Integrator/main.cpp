@@ -95,10 +95,17 @@ int main(int argc, char* args[]) {
 
 					for (int j = 0; j < 4; j++)
 					{
-						if (OnCollision(projectile, rectangles[i])) {
-							//cout << "Collision" << endl;
-							i++;
-							break;
+						if (OnCollision(projectile, rectangles[j])) {
+							if (chosen_weapon->bounce_coefficient == 0)
+							{
+								//HandleCollision(projectile, rectangles[j], dt);
+								i++;
+								break;
+							}
+							else
+							{
+								HandleCollision(projectile, rectangles[j], dt);
+							}
 						}
 					}
 
@@ -108,7 +115,7 @@ int main(int argc, char* args[]) {
 						i++;
 					}
 
-					//render.blit_all(projectile.pos, worm, target.pos, option, angle);
+					render.blit_all(projectile.pos, worm, target.pos, option, angle);
 				}
 				cout << endl;
 			}
@@ -138,6 +145,7 @@ int main(int argc, char* args[]) {
 
 			render.blit_all(projectile.pos, worm, target.pos, option,final_angle);
 		}
+		//
 		cout << endl;
 
 		final_angle = 0;
@@ -145,6 +153,7 @@ int main(int argc, char* args[]) {
 
 		render.clearScreen();
 	}
+	
 	system("pause");
 	return 0;
 }

@@ -1,9 +1,9 @@
-#include <iostream>
 #include "Physics.h"
 #include "Render.h"
 #include "p2Point.h"
 #include "p2Log.h"
 #include <math.h>
+#include <iostream>
 using namespace std;
 
 Particle::Particle() {
@@ -203,6 +203,7 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 	*/
 }
 
+// Collsions
 bool OnCollision(Particle particle, VRectangle rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
 		particle.pos.x + particle.w > rectangle.x &&
@@ -216,3 +217,59 @@ bool OnCollision(Particle projectile, Particle target) {
 		projectile.pos.y < target.pos.y + target.h &&
 		projectile.pos.y + projectile.h > target.pos.y);
 }
+
+void HandleCollision(Particle& particle, VRectangle rect, float dt) {
+	int COLLIDER_MARGIN = 10;
+	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
+	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;
+
+	//going down
+	if (particle.v.y < 0)
+	{
+		//colliding with the floor
+		if (particle.pos.y < rect.y + COLLIDER_MARGIN)
+		{
+			particle.v.y = -particle.v.y;
+		}
+		//colliding with one of the two walls
+		else
+		{
+			particle.v.x = -particle.v.x;
+		}
+	}
+
+	//going up
+	else
+	{
+		//colliding with ceiling
+		if (particle.pos.y < rect.y + rect.h - COLLIDER_MARGIN)
+		{
+			particle.v.y = -particle.v.y;
+		}
+		//colliding with one of the two walls
+		else
+		{
+			particle.v.x = -particle.v.x;
+		}
+	}
+
+	particle.prev_pos.x = particle.pos.x;
+	particle.pos.x = particle.pos.x + particle.v.x * dt;
+
+	particle.prev_pos.y = particle.pos.y;
+	particle.pos.y = particle.pos.y - particle.v.y * dt;
+}
+
+/*
+if ((particle.v.y < 0) && (particle.pos.x > rect.x) && particle.pos.x < rect.x + rect.w)
+{
+	particle.v.y = -particle.v.y;
+}
+	//coming from up
+
+	//coming from down
+
+	//coming from left
+
+	//coming from right
+*/
