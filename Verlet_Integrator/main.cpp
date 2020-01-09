@@ -73,7 +73,9 @@ int main(int argc, char* args[]) {
 		if (chosen_weapon->wind_activated == true) {
 			a.x -= wind_acceleration;
 		}
-
+		if (chosen_weapon->linear_trajectory == false) {
+			a.y -= 0.5;
+		}
 		float angle;
 
 		while (final_angle == 0) {
@@ -94,10 +96,9 @@ int main(int argc, char* args[]) {
 				//projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
 
 				if (chosen_weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, true);
+					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
 				if (chosen_weapon == &Bazooka)
 					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
-
 				for (int i = 0; i < max_path_iterations; i++)
 				{
 					//add speed calculations
@@ -135,7 +136,8 @@ int main(int argc, char* args[]) {
 		}
 
 		//render bazooka final path
-		projectile.prev_pos = worm;
+		projectile.prev_pos.x = worm.x + 5;
+		projectile.prev_pos.y = worm.y - 30;
 		angle = final_angle;
 
 		cout << "Final angle " << angle << endl;
@@ -151,7 +153,19 @@ int main(int argc, char* args[]) {
 			fPoint temp = projectile.pos;
 			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
 			projectile.prev_pos = temp;
+			for (int j = 0; j < 4; j++)
+			{
+				if (OnCollision(projectile, rectangles[j])) {
+					if (chosen_weapon->bounce_coefficient == 0)
+					{
 
+					}
+					else
+					{
+						HandleCollision(projectile, rectangles[j], dt, chosen_weapon->bounce_coefficient);
+					}
+				}
+			}
 			if (OnCollision(projectile, target)) {
 				break;
 			}
@@ -166,7 +180,7 @@ int main(int argc, char* args[]) {
 
 		render.clearScreen();
 	}
-	
+
 	system("pause");
 	return 0;
 }
