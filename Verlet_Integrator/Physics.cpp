@@ -4,6 +4,7 @@
 #include "p2Log.h"
 #include <math.h>
 #include <iostream>
+#include "Globals.h"
 using namespace std;
 
 Particle::Particle() {
@@ -26,7 +27,13 @@ Particle::Particle() {
 
 Particle::~Particle() {}
 
-//initial situation of the particle
+#define RECTANGLE_THICKNESS 200
+
+VRectangle rectangles[4];
+VRectangle top_rectangle(0, -RECTANGLE_THICKNESS, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
+VRectangle left_rectangle(-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT);
+VRectangle right_rectangle(SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT);
+VRectangle bottom_rectangle(-RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
 
 //main verlet
 
@@ -158,6 +165,44 @@ fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fP
 	final_position.y = position.y + velocity.y * dt + 0.5f * acceleration.y * dt * dt;
 
 	return final_position;
+}
+
+float CalculateTrajectory(Particle projectile, Particle target, float angle, Weapon* chosen_weapon) {
+	rectangles[0] = top_rectangle;
+	rectangles[1] = left_rectangle;
+	rectangles[2] = right_rectangle;
+	rectangles[3] = bottom_rectangle;
+
+	float final_angle = 0;
+
+	if (chosen_weapon == &Grenade)
+		projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
+	if (chosen_weapon == &Bazooka)
+		projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
+	for (int i = 0; i < max_path_iterations; i++)
+	{
+		fPoint temp = projectile.pos;
+		projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
+		projectile.prev_pos = temp;
+
+		for (int j = 0; j < 4; j++)
+		{
+			if (OnCollision(projectile, rectangles[j])) {
+				if (chosen_weapon->bounce_coefficient != 0)
+				{
+					HandleCollision(projectile, rectangles[j], dt, chosen_weapon->bounce_coefficient);
+				}
+			}
+		}
+
+		if (OnCollision(projectile, target)) {
+			cout << "Target hit" << endl;
+			final_angle = angle;
+			i++;
+			return  final_angle;
+			break;
+		}
+	}
 }
 
 //additional formulas

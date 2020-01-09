@@ -20,6 +20,9 @@ struct Weapon {
 	}
 };
 
+Weapon Grenade(20, 0.6, false, true);
+Weapon Bazooka(20, 0, true, false);
+
 struct VRectangle {
 	float x = 0;
 	float y = 0;
@@ -75,6 +78,7 @@ fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
+float CalculateTrajectory(Particle projectile, Particle target, float angle, Weapon* weapon_type);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
