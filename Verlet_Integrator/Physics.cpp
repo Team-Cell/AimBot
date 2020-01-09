@@ -81,9 +81,9 @@ fPoint Verlet_Acceleration(float m, fPoint total_f) {
 
 //acceleration and velocity
 
-fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass, float wind) {
+fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass) {
 	fPoint acceleration;
-	acceleration.x = (((0.5 * density * drag_coefficient * area) * (speed.x * speed.x)) / mass) + wind;
+	acceleration.x = ((0.5 * density * drag_coefficient * area) * (speed.x * speed.x)) / mass;
 	acceleration.y = ((0.5 * density * drag_coefficient * area) * (speed.y * speed.y)) / mass;
 	return acceleration;
 }
