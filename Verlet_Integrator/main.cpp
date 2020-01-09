@@ -32,7 +32,7 @@ int main(int argc, char* args[]) {
 	int min_angle = 0;
 	int max_angle = 80;
 
-	float wind_acceleration = 0.2;
+	float wind_acceleration = 0.2f;
 
 	float final_angle = 0;
 
@@ -71,7 +71,7 @@ int main(int argc, char* args[]) {
 
 		fPoint a = { 0,0 };
 		if (chosen_weapon->wind_activated == true) {
-			a = AddWind(a);
+			a = AddWind(a, wind_acceleration);
 		}
 		if (chosen_weapon->linear_trajectory == false) {
 			a = AddGravity(a);

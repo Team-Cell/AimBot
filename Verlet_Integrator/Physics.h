@@ -86,7 +86,7 @@ void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);
 float Module(fPoint var);
-fPoint AddWind(fPoint a);
+fPoint AddWind(fPoint a, float wind);
 fPoint AddGravity(fPoint a);
 
 #endif // !_PHYSICS_H_
