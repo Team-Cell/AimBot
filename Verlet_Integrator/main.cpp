@@ -133,7 +133,7 @@ int main(int argc, char* args[]) {
 
 		cout << "Final angle " << angle << endl;
 
-		projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
+		projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 }, false);
 
 		for (int i = 0; i < max_path_iterations; i++)
 		{
