@@ -4,15 +4,15 @@
 #include "Physics.h"
 #include "Render.h"
 #include "p2Log.h"
+#include "Globals.h"
+using namespace std;
+
 #include "SDL/include/SDL.h"
 #include "SDL_Image/include/SDL_image.h"
-using namespace std;
 
 #pragma comment(lib, "SDL_Image/libx86/SDL2_image.lib")
 #pragma comment(lib, "SDL/libx86/SDL2.lib")
 #pragma comment(lib, "SDL/libx86/SDL2main.lib")
-
-#define RECTANGLE_THICKNESS 200
 
 void HandleInput(int& option, int& Montecarlo, fPoint& worm, Particle& target);
 
@@ -36,28 +36,7 @@ int main(int argc, char* args[]) {
 
 	float final_angle = 0;
 
-	float dt = 1.0f;
-	float fps = 30;
-
-	int Montecarlo = 10;
-	int Montecarlo_iterations = 0;
-	int max_path_iterations = 50;
-
-	Weapon Grenade(20, 0.6, false, true);
-	Weapon Bazooka(20, 0, true, false);
 	Weapon* chosen_weapon = nullptr;
-
-	//screen limit rectangles
-	VRectangle rectangles[4];
-	VRectangle top_rectangle(0, -RECTANGLE_THICKNESS, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
-	VRectangle left_rectangle(-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS,SCREEN_HEIGHT);
-	VRectangle right_rectangle(SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT);
-	VRectangle bottom_rectangle(-RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2*RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
-
-	rectangles[0] = top_rectangle;
-	rectangles[1] = left_rectangle;
-	rectangles[2] = right_rectangle;
-	rectangles[3] = bottom_rectangle;
 
 	render.Init();
 	srand(time(NULL));
@@ -76,9 +55,10 @@ int main(int argc, char* args[]) {
 		if (chosen_weapon->linear_trajectory == false) {
 			a.y -= 0.5;
 		}
+
 		float angle;
 
-		while (final_angle == 0) {
+		while ((final_angle == 0)&&(Montecarlo_iterations < Max_Montecarlos)) {
 			Montecarlo_iterations++;
 			cout << "Montecarlo n " << Montecarlo_iterations << endl;
 
@@ -92,47 +72,17 @@ int main(int argc, char* args[]) {
 
 				cout << "Angle " << angle << endl;
 
-				//Test projectile is a bazooka so no gravity is applied to it
-				//projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
+				CalculateTrajectory(projectile, angle, chosen_weapon);
 
-				if (chosen_weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
-				if (chosen_weapon == &Bazooka)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
-				for (int i = 0; i < max_path_iterations; i++)
-				{
-					//add speed calculations
-					fPoint temp = projectile.pos;
-					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
-					//cout << "Position x:" << projectile.pos.x << " y: " << projectile.pos.y << endl;
-					projectile.prev_pos = temp;
-
-					for (int j = 0; j < 4; j++)
-					{
-						if (OnCollision(projectile, rectangles[j])) {
-							if (chosen_weapon->bounce_coefficient == 0)
-							{
-
-							}
-							else
-							{
-								HandleCollision(projectile, rectangles[j], dt, chosen_weapon->bounce_coefficient);
-							}
-						}
-					}
-
-					if (OnCollision(projectile, target)) {
-						cout << "Target hit" << endl;
-						final_angle = angle;
-						i++;
-						break;
-					}
-
-					render.blit_all(projectile.pos, worm, target.pos, option, angle);
+				render.blit_all(projectile.pos, worm, target.pos, option, angle);
 				}
 				cout << endl;
 			}
 			cout << "=====================" << endl << endl;
+
+		if (final_angle == 0)
+		{
+			final_angle = 90;
 		}
 
 		//render bazooka final path
@@ -156,11 +106,7 @@ int main(int argc, char* args[]) {
 			for (int j = 0; j < 4; j++)
 			{
 				if (OnCollision(projectile, rectangles[j])) {
-					if (chosen_weapon->bounce_coefficient == 0)
-					{
-
-					}
-					else
+					if (chosen_weapon->bounce_coefficient != 0)
 					{
 						HandleCollision(projectile, rectangles[j], dt, chosen_weapon->bounce_coefficient);
 					}
