@@ -11,10 +11,12 @@ struct Weapon {
 	float initial_speed = 0;
 	float bounce_coefficient = 0;
 	bool linear_trajectory = false;
-	Weapon(float init_speed, float bounce_coeff, bool lin_traj) {
+	bool wind_activated = false;
+	Weapon(float init_speed, float bounce_coeff, bool lin_traj, bool wind) {
 		initial_speed = init_speed;
 		bounce_coefficient = bounce_coeff;
 		linear_trajectory = lin_traj;
+		wind_activated = wind;
 	}
 };
 

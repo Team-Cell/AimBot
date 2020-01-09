@@ -41,8 +41,8 @@ int main(int argc, char* args[]) {
 	int Montecarlo_iterations = 0;
 	int max_path_iterations = 50;
 
-	Weapon Grenade(40, 0.6, false);
-	Weapon Bazooka(20, 0, true);
+	Weapon Grenade(40, 0.6, false, true);
+	Weapon Bazooka(20, 0, true, false);
 	Weapon* chosen_weapon = nullptr;
 
 	//screen limit rectangles
@@ -95,7 +95,11 @@ int main(int argc, char* args[]) {
 				{
 					//add speed calculations
 					fPoint temp = projectile.pos;
-					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, { 0, 0 }, dt);
+					fPoint a = { 0,0 };
+					if (chosen_weapon->wind_activated == true) {
+						a.x -= 0.5;
+					}
+					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
 					//cout << "Position x:" << projectile.pos.x << " y: " << projectile.pos.y << endl;
 					projectile.prev_pos = temp;
 
