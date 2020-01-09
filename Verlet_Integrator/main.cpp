@@ -66,7 +66,10 @@ int main(int argc, char* args[]) {
 		HandleInput(option, Montecarlo, worm, target);
 		if (option == 1) chosen_weapon = &Grenade;
 		if (option == 2) chosen_weapon = &Bazooka;
-
+		fPoint a = { 0,0 };
+		if (chosen_weapon->wind_activated == true) {
+			a.x -= 0.5;
+		}
 		float angle;
 
 		while (final_angle == 0) {
@@ -87,18 +90,14 @@ int main(int argc, char* args[]) {
 				//projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
 
 				if (chosen_weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 }, true);
+					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, true);
 				if (chosen_weapon == &Bazooka)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 }, false);
+					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
 
 				for (int i = 0; i < max_path_iterations; i++)
 				{
 					//add speed calculations
 					fPoint temp = projectile.pos;
-					fPoint a = { 0,0 };
-					if (chosen_weapon->wind_activated == true) {
-						a.x -= 0.5;
-					}
 					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
 					//cout << "Position x:" << projectile.pos.x << " y: " << projectile.pos.y << endl;
 					projectile.prev_pos = temp;
@@ -137,13 +136,16 @@ int main(int argc, char* args[]) {
 
 		cout << "Final angle " << angle << endl;
 
-		projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 }, false);
+		if (chosen_weapon == &Grenade)
+				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, true);
+		if (chosen_weapon == &Bazooka)
+				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
 
 		for (int i = 0; i < max_path_iterations; i++)
 		{
 			//add speed calculations
 			fPoint temp = projectile.pos;
-			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, { 0, 0 }, dt);
+			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
 			projectile.prev_pos = temp;
 
 			if (OnCollision(projectile, target)) {
