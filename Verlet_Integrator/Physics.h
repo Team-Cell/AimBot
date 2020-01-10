@@ -4,7 +4,7 @@
 #include "p2Point.h"
 
 #define PI 3.1416
-#define GRAVITY 9.81
+#define GRAVITY 0.5
 #define DRAG_COEFFICIENT 1 
 
 struct Weapon {
@@ -20,16 +20,16 @@ struct Weapon {
 	}
 };
 
-struct VRectangle {
+struct Collider {
 	float x = 0;
 	float y = 0;
 	float w = 0;
 	float h = 0;
 
-	VRectangle(){};
-	~VRectangle() {};
+	Collider(){};
+	~Collider() {};
 
-	VRectangle(float u_x, float u_y, float u_w, float u_h){
+	Collider(float u_x, float u_y, float u_w, float u_h){
 		x = u_x;
 		y = u_y;
 		w = u_w;
@@ -58,7 +58,29 @@ public:
 	int		h;
 	float	gravity;
 	float	tf;
-	int		fps;
+};
+
+class PhysicsEngine
+{
+public:
+	PhysicsEngine();
+	~PhysicsEngine();
+
+private:
+
+public:
+	float dt;
+
+	int Montecarlo;
+	int Montecarlo_iterations;
+	int Max_Montecarlo;
+	int max_path_iterations;
+
+	float final_angle;
+	int min_angle;
+	int max_angle;
+
+	float wind_acceleration;
 };
 
 //main verlet
@@ -75,19 +97,21 @@ fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
+void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, Collider target, Collider rectangles[4], PhysicsEngine physics);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
 //collisions
-bool OnCollision(Particle particle, VRectangle rectangle);
+bool OnCollision(Particle particle, Collider rectangle);
+void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_coefficient);
+
+// To be deleted
 bool OnCollision(Particle projectile, Particle target);
-void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce_coefficient);
+//
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);
 float Module(fPoint var);
-fPoint AddWind(fPoint a, float wind);
-fPoint AddGravity(fPoint a);
 
 #endif // !_PHYSICS_H_
 

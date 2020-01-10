@@ -20,16 +20,32 @@ Particle::Particle() {
 	h = 32;
 	gravity = 0;
 	tf = 5;
-	fps = 30;
 	wind = { 10, 0 };
 }
 
 Particle::~Particle() {}
 
-//initial situation of the particle
+PhysicsEngine::PhysicsEngine()
+{
+	dt = 1.0f;
+
+	Montecarlo = 10;
+	Montecarlo_iterations = 0;
+	Max_Montecarlo = 5;
+	max_path_iterations = 60;
+
+	final_angle = 0;
+	min_angle = 0;
+	max_angle = 80;
+
+	wind_acceleration = 0.2f;
+}
+
+PhysicsEngine::~PhysicsEngine()
+{
+}
 
 //main verlet
-
 fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint a, float dt) {
 
 	pos = pos + (pos - prev_pos) + a * dt * dt;
@@ -160,6 +176,10 @@ fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fP
 	return final_position;
 }
 
+void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, Collider target, Collider rectangles[4]) {
+
+}
+
 //additional formulas
 
 fPoint Forces_Sum(fPoint f1, fPoint f2) {
@@ -206,7 +226,7 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 }
 
 // Collsions
-bool OnCollision(Particle particle, VRectangle rectangle) {
+bool OnCollision(Particle particle, Collider rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
 		particle.pos.x + particle.w > rectangle.x &&
 		particle.pos.y < rectangle.y + rectangle.h &&
@@ -220,7 +240,7 @@ bool OnCollision(Particle projectile, Particle target) {
 		projectile.pos.y + projectile.h > target.pos.y);
 }
 
-void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce_coefficient) {
+void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_coefficient) {
 	int COLLIDER_MARGIN = 10;
 	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;
@@ -275,11 +295,3 @@ if ((particle.v.y < 0) && (particle.pos.x > rect.x) && particle.pos.x < rect.x +
 
 	//coming from right
 */
-fPoint AddWind(fPoint a, float wind) {
-	a.x -= wind;
-	return a;
-}
-fPoint AddGravity(fPoint a) {
-	a.y -= 0.5;
-	return a;
-}
