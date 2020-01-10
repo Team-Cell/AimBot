@@ -14,7 +14,7 @@ using namespace std;
 
 #define RECTANGLE_THICKNESS 200
 
-void HandleInput(int& option, int& Montecarlo, fPoint& worm, Particle& target);
+void HandleInput(int& option, int& Montecarlo, fPoint& worm, VRectangle& target);
 
 int main(int argc, char* args[]) {
 
@@ -23,25 +23,14 @@ int main(int argc, char* args[]) {
 	bool exit = false;
 
 	Particle projectile;
-	Particle target;
+	//worms size may be changed
+	VRectangle target = {0,0,66,75};
 	fPoint worm;
 
 	Render render;
+	PhysicsEngine physics;
+
 	int option = 2;
-
-	int min_angle = 0;
-	int max_angle = 80;
-
-	float wind_acceleration = 0.2f;
-
-	float final_angle = 0;
-
-	float dt = 1.0f;
-	float fps = 30;
-
-	int Montecarlo = 10;
-	int Montecarlo_iterations = 0;
-	int max_path_iterations = 50;
 
 	Weapon Grenade(20, 0.6, false, true);
 	Weapon Bazooka(20, 0, true, false);
@@ -65,80 +54,82 @@ int main(int argc, char* args[]) {
 	//main loop
 	while (exit == false)
 	{
-		HandleInput(option, Montecarlo, worm, target);
+		HandleInput(option, physics.Montecarlo, worm, target);
+
 		if (option == 1) chosen_weapon = &Grenade;
 		if (option == 2) chosen_weapon = &Bazooka;
 
 		fPoint a = { 0,0 };
 		if (chosen_weapon->wind_activated == true) {
-			a = AddWind(a, wind_acceleration);
+			a = AddWind(a, physics.wind_acceleration);
 		}
 		if (chosen_weapon->linear_trajectory == false) {
 			a = AddGravity(a);
 		}
 		float angle;
 
-		while (final_angle == 0) {
-			Montecarlo_iterations++;
-			cout << "Montecarlo n " << Montecarlo_iterations << endl;
+		while (physics.final_angle == 0) {
+			physics.Montecarlo_iterations++;
+			cout << "Montecarlo n " << physics.Montecarlo_iterations << endl;
 
-			for (int i = 0; i < Montecarlo && (final_angle == 0); i++) {
+			for (int i = 0; i < physics.Montecarlo && (physics.final_angle == 0); i++) {
 
 				cout << "Missile: " << i + 1 << endl;
+
 				projectile.prev_pos.x = worm.x + 5;
 				projectile.prev_pos.y = worm.y - 30;
-				angle = rand() % max_angle * 100 + 1;
+
+				angle = rand() % (physics.max_angle - physics.min_angle) * 100 + 1;
+				angle += physics.min_angle;
 				angle *= 0.01;
-
 				cout << "Angle " << angle << endl;
-
-				//Test projectile is a bazooka so no gravity is applied to it
-				//projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, { 0, 0 });
 
 				if (chosen_weapon == &Grenade)
 					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
 				if (chosen_weapon == &Bazooka)
 					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
-				for (int i = 0; i < max_path_iterations; i++)
+
+				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
-					//add speed calculations
 					fPoint temp = projectile.pos;
-					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
-					//cout << "Position x:" << projectile.pos.x << " y: " << projectile.pos.y << endl;
+					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, physics.dt);
 					projectile.prev_pos = temp;
 
 					for (int j = 0; j < 4; j++)
 					{
 						if (OnCollision(projectile, rectangles[j])) {
-							if (chosen_weapon->bounce_coefficient == 0)
+							if (chosen_weapon->bounce_coefficient != 0)
 							{
-
+								HandleCollision(projectile, rectangles[j], physics.dt, chosen_weapon->bounce_coefficient);
 							}
 							else
 							{
-								HandleCollision(projectile, rectangles[j], dt, chosen_weapon->bounce_coefficient);
+								i++;
+								break;
 							}
 						}
 					}
 
 					if (OnCollision(projectile, target)) {
 						cout << "Target hit" << endl;
-						final_angle = angle;
+						physics.final_angle = angle;
 						i++;
 						break;
 					}
 
-					render.blit_all(projectile.pos, worm, target.pos, option, angle);
+					//debug draw
+					//render.blit_all(projectile.pos, worm, { target.x, target.y }, option, angle);
 				}
 				cout << endl;
 			}
 			cout << "=====================" << endl << endl;
 		}
 
-		//render bazooka final path
+		//render final path
+
 		projectile.prev_pos.x = worm.x + 5;
 		projectile.prev_pos.y = worm.y - 30;
-		angle = final_angle;
+		angle = physics.final_angle;
 
 		cout << "Final angle " << angle << endl;
 
@@ -147,35 +138,34 @@ int main(int argc, char* args[]) {
 		if (chosen_weapon == &Bazooka)
 				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
 
-		for (int i = 0; i < max_path_iterations; i++)
+		for (int i = 0; i < physics.max_path_iterations; i++)
 		{
-			//add speed calculations
 			fPoint temp = projectile.pos;
-			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, dt);
+			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, physics.dt);
 			projectile.prev_pos = temp;
 			for (int j = 0; j < 4; j++)
 			{
 				if (OnCollision(projectile, rectangles[j])) {
-					if (chosen_weapon->bounce_coefficient == 0)
+					if (chosen_weapon->bounce_coefficient != 0)
 					{
-
+						HandleCollision(projectile, rectangles[j], physics.dt, chosen_weapon->bounce_coefficient);
 					}
 					else
 					{
-						HandleCollision(projectile, rectangles[j], dt, chosen_weapon->bounce_coefficient);
+						i++;
+						break;
 					}
 				}
 			}
 			if (OnCollision(projectile, target)) {
 				break;
 			}
-
-			render.blit_all(projectile.pos, worm, target.pos, option,final_angle);
+			render.blit_all(projectile.pos, worm, {target.x, target.y}, option, physics.final_angle);
 		}
 		//
 		cout << endl;
 
-		final_angle = 0;
+		physics.final_angle = 0;
 		option = 0;
 
 		render.clearScreen();
@@ -185,14 +175,14 @@ int main(int argc, char* args[]) {
 	return 0;
 }
 
-void HandleInput(int& option, int& Montecarlo, fPoint& worm_position, Particle& target) {
+void HandleInput(int& option, int& Montecarlo, fPoint& worm_position, VRectangle& target) {
 
 	cout << "Which weapon do you prefer? "<< endl <<"1. Grenade " << endl << "2. Bazooka: " << endl;
 	cin >> option;
 	cout << "Which is the initial position of the Worm?" << endl;
 	cin >> worm_position.x >> worm_position.y;
 	cout << "Which is the target position?" << endl;
-	cin >> target.pos.x >> target.pos.y;
+	cin >> target.x >> target.y;
 	cout << "How many Montecarlo iterations do you want to do? " << endl;
 	cin >> Montecarlo;
 	cout << endl;

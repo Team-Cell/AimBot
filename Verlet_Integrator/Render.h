@@ -12,7 +12,7 @@ struct SDL_Texture;
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 800
 
-class Render : public Particle
+class Render
 {
 public:
 	Render();
@@ -26,6 +26,7 @@ public:
 
 public:
 	SDL_Window *window;
+	float fps;
 	//SDL_Renderer *renderer;
 	Animation idle_animation;
 

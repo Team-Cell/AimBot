@@ -58,7 +58,25 @@ public:
 	int		h;
 	float	gravity;
 	float	tf;
-	int		fps;
+};
+
+class PhysicsEngine
+{
+public:
+	PhysicsEngine();
+	~PhysicsEngine();
+
+private:
+
+public:
+	float dt;
+	int Montecarlo;
+	int Montecarlo_iterations;
+	int max_path_iterations;
+	float final_angle;
+	int min_angle;
+	int max_angle;
+	float wind_acceleration;
 };
 
 //main verlet
@@ -75,13 +93,17 @@ fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
+void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, VRectangle target, VRectangle rectangles[4], PhysicsEngine physics);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
 //collisions
 bool OnCollision(Particle particle, VRectangle rectangle);
-bool OnCollision(Particle projectile, Particle target);
 void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce_coefficient);
+
+// To be deleted
+bool OnCollision(Particle projectile, Particle target);
+//
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);

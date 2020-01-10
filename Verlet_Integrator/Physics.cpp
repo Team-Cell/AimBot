@@ -20,16 +20,28 @@ Particle::Particle() {
 	h = 32;
 	gravity = 0;
 	tf = 5;
-	fps = 30;
 	wind = { 10, 0 };
 }
 
 Particle::~Particle() {}
 
-//initial situation of the particle
+PhysicsEngine::PhysicsEngine()
+{
+	dt = 1.0f;
+	Montecarlo = 10;
+	Montecarlo_iterations = 0;
+	max_path_iterations = 50;
+	final_angle = 0;
+	min_angle = 0;
+	max_angle = 80;
+	wind_acceleration = 0.2f;
+}
+
+PhysicsEngine::~PhysicsEngine()
+{
+}
 
 //main verlet
-
 fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint a, float dt) {
 
 	pos = pos + (pos - prev_pos) + a * dt * dt;
@@ -158,6 +170,10 @@ fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fP
 	final_position.y = position.y + velocity.y * dt + 0.5f * acceleration.y * dt * dt;
 
 	return final_position;
+}
+
+void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, VRectangle target, VRectangle rectangles[4]) {
+
 }
 
 //additional formulas
