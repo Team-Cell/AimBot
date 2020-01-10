@@ -18,9 +18,7 @@ Particle::Particle() {
 	drag_coeficient = 0;
 	w = 32;
 	h = 32;
-	gravity = 0;
-	tf = 5;
-	wind = { 10, 0 };
+	weapon = nullptr;
 }
 
 Particle::~Particle() {}
@@ -196,14 +194,6 @@ float Module(fPoint var) {
 
 }
 
-//This while could be used to calculate a number of forces before sending to the Verlet_Acceleration function
-/*p2Point<float> Calculate_Total_Forces(int number_forces) {
-	while (number_forces > 1) {
-		Calculate_Two_Forces()
-		number_forces--;
-	}
-}*/
-
 //here we calculate inicialize the inicial variables in orther to calculate physics later
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density)
 {
@@ -231,13 +221,6 @@ bool OnCollision(Particle particle, Collider rectangle) {
 		particle.pos.x + particle.w > rectangle.x &&
 		particle.pos.y < rectangle.y + rectangle.h &&
 		 particle.pos.y + particle.h > rectangle.y);
-}
-
-bool OnCollision(Particle projectile, Particle target) {
-	return (projectile.pos.x < target.pos.x + target.w &&
-		projectile.pos.x + projectile.w > target.pos.x &&
-		projectile.pos.y < target.pos.y + target.h &&
-		projectile.pos.y + projectile.h > target.pos.y);
 }
 
 void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_coefficient) {
@@ -281,17 +264,3 @@ void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_c
 	particle.prev_pos.y = particle.pos.y;
 	particle.pos.y = particle.pos.y - particle.v.y * dt;
 }
-
-/*
-if ((particle.v.y < 0) && (particle.pos.x > rect.x) && particle.pos.x < rect.x + rect.w)
-{
-	particle.v.y = -particle.v.y;
-}
-	//coming from up
-
-	//coming from down
-
-	//coming from left
-
-	//coming from right
-*/

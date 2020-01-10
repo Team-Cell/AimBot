@@ -12,6 +12,7 @@ struct Weapon {
 	float bounce_coefficient = 0;
 	bool linear_trajectory = false;
 	bool wind_activated = false;
+
 	Weapon(float init_speed, float bounce_coeff, bool lin_traj, bool wind) {
 		initial_speed = init_speed;
 		bounce_coefficient = bounce_coeff;
@@ -47,7 +48,6 @@ public:
 	fPoint	prev_pos;
 	fPoint	v;
 	fPoint	a;
-	fPoint  wind;
 
 	float	density;
 	float	area;
@@ -57,7 +57,7 @@ public:
 	int		w;
 	int		h;
 	float	gravity;
-	float	tf;
+	Weapon* weapon;
 };
 
 class PhysicsEngine

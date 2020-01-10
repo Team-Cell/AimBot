@@ -31,11 +31,8 @@ int main(int argc, char* args[]) {
 	PhysicsEngine physics;
 	Audio audio;
 
-	int option = 1;
-
 	Weapon Grenade(20, 0.6, false, true);
 	Weapon Bazooka(20, 0, true, false);
-	Weapon* chosen_weapon = nullptr;
 
 	//screen limit rectangles
 	Collider rectangles[4];
@@ -51,27 +48,28 @@ int main(int argc, char* args[]) {
 
 	render.Init();
 	audio.Init();
-
-	srand(time(NULL));
 	audio.PlayMusic("Music/worms.ogg");
+	srand(time(NULL));
 
 	//main loop
 	while (exit == false)
 	{
+		int option = 1;
 		HandleInput(option, physics.Montecarlo, worm, target);
 
-		if (option == 1) chosen_weapon = &Grenade;
-		if (option == 2) chosen_weapon = &Bazooka;
+		if (option == 1) projectile.weapon = &Grenade;
+		if (option == 2) projectile.weapon = &Bazooka;
 
-		if (chosen_weapon->wind_activated == true) {
+		if (projectile.weapon->wind_activated == true) {
 			projectile.a += {0, physics.wind_acceleration};
 		}
-		if (chosen_weapon->linear_trajectory == false) {
+		if (projectile.weapon->linear_trajectory == false) {
 			projectile.a += { 0, -GRAVITY };
 		}
 		float angle;
 
-		//find projectile path to hit the target
+		//find projectile path to hit the target ================================================================================
+
 		while ((physics.final_angle == 0) && (physics.Montecarlo_iterations < physics.Max_Montecarlo)) {
 			physics.Montecarlo_iterations++;
 			cout << "Montecarlo n " << physics.Montecarlo_iterations << endl;
@@ -80,18 +78,18 @@ int main(int argc, char* args[]) {
 
 				cout << "Missile: " << i + 1 << endl;
 
-				projectile.prev_pos.x = worm.x + 5;
-				projectile.prev_pos.y = worm.y - 30;
-
 				angle = rand() % (physics.max_angle - physics.min_angle) * 100 + 1;
 				angle += physics.min_angle;
 				angle *= 0.01;
 				cout << "Angle " << angle << endl;
 
-				if (chosen_weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
-				if (chosen_weapon == &Bazooka)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
+				projectile.prev_pos.x = worm.x + 5;
+				projectile.prev_pos.y = worm.y - 30;
+
+				if (projectile.weapon == &Grenade)
+					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
+				if (projectile.weapon == &Bazooka)
+					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
 
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
@@ -102,9 +100,9 @@ int main(int argc, char* args[]) {
 					for (int j = 0; j < 4; j++)
 					{
 						if (OnCollision(projectile, rectangles[j])) {
-							if (chosen_weapon->bounce_coefficient != 0)
+							if (projectile.weapon->bounce_coefficient != 0)
 							{
-								HandleCollision(projectile, rectangles[j], physics.dt, chosen_weapon->bounce_coefficient);
+								HandleCollision(projectile, rectangles[j], physics.dt, projectile.weapon->bounce_coefficient);
 							}
 							else
 							{
@@ -113,7 +111,6 @@ int main(int argc, char* args[]) {
 							}
 						}
 					}
-
 					if (OnCollision(projectile, target)) {
 						cout << "Target hit" << endl;
 						physics.final_angle = angle;
@@ -129,31 +126,32 @@ int main(int argc, char* args[]) {
 			cout << "=====================" << endl << endl;
 		}
 
-		//render final path
+		//render final path =====================================================================================================
+
+		angle = physics.final_angle;
+		if (physics.final_angle == 0) angle = 90;
+		cout << "Final angle " << angle << endl;
 
 		projectile.prev_pos.x = worm.x + 5;
 		projectile.prev_pos.y = worm.y - 30;
-		angle = physics.final_angle;
-		if (physics.final_angle == 0) angle = 90;
 
-		cout << "Final angle " << angle << endl;
-
-		if (chosen_weapon == &Grenade)
-				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, true);
-		if (chosen_weapon == &Bazooka)
-				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
+		if (projectile.weapon == &Grenade)
+				projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, true);
+		if (projectile.weapon == &Bazooka)
+				projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
 
 		for (int i = 0; i < 300; i++)
 		{
 			fPoint temp = projectile.pos;
 			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
 			projectile.prev_pos = temp;
+
 			for (int j = 0; j < 4; j++)
 			{
 				if (OnCollision(projectile, rectangles[j])) {
-					if (chosen_weapon->bounce_coefficient != 0)
+					if (projectile.weapon->bounce_coefficient != 0)
 					{
-						HandleCollision(projectile, rectangles[j], physics.dt, chosen_weapon->bounce_coefficient);
+						HandleCollision(projectile, rectangles[j], physics.dt, projectile.weapon->bounce_coefficient);
 					}
 					else
 					{
@@ -165,15 +163,14 @@ int main(int argc, char* args[]) {
 			if (OnCollision(projectile, target)) {
 				break;
 			}
+
 			render.blit_all(projectile.pos, worm, {target.x, target.y}, option, physics.final_angle);
 		}
-		//
-		cout << endl;
 
+		cout << endl;
 		physics.Montecarlo_iterations = 0;
 		physics.final_angle = 0;
 		option = 0;
-
 		render.clearScreen();
 	}
 
