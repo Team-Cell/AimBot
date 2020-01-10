@@ -143,11 +143,13 @@ int main(int argc, char* args[]) {
 		cout << "Final angle " << angle << endl;
 
 		if (chosen_weapon == &Grenade)
+				audio.PlayFx(2);
 				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, true);
 			
 		if (chosen_weapon == &Bazooka)
+				audio.PlayFx(3);
 				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
-						
+				
 
 		for (int i = 0; i < 300; i++)
 		{
