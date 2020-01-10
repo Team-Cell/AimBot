@@ -32,6 +32,18 @@ Render::Render() {
 	bazooka_rect.w = 62;
 	bazooka_rect.h = 31;
 
+	platform1rect.x = 0;
+	platform1rect.y = 0;
+	platform1rect.w = 168;
+	platform1rect.h = 45;
+
+	gridrect.x = 0;
+	gridrect.y = 0;
+	gridrect.w = 800;
+	gridrect.h =800;
+
+	platform2rect = platform1rect;
+
 	center.x = 31;
 	center.y = 15;
 
@@ -58,6 +70,17 @@ Render::Render() {
 	idle_animation.PushBack({ 594, 75, 66, 75 });
 	idle_animation.speed = 0.07f;
 
+	/////IDLE ANIMATION//////
+	background_animation.PushBack({ 0, 0, 800, 800 });
+	background_animation.PushBack({ 800, 0, 800, 800 });
+	background_animation.PushBack({ 1600, 0, 800, 800 });
+	background_animation.PushBack({ 2400, 0, 800, 800 });
+	background_animation.PushBack({ 0, 800, 800, 800 });
+	background_animation.PushBack({ 800, 800, 800, 800 });
+	background_animation.PushBack({ 1600, 800, 800, 800 });
+	background_animation.PushBack({ 2400, 800, 800, 800 });
+	background_animation.speed = 0.2f;
+
 }
 Render::~Render() {}
 
@@ -68,13 +91,24 @@ void Render::Init() {
 	//// GRAPHICS BACKGROUND ////
 	backgroundrect.x = 0;
 	backgroundrect.y = 0;
-	backgroundrect.w = SCREEN_WIDTH;
-	backgroundrect.h = SCREEN_HEIGHT;
-	surfacebackground = IMG_Load("Assets/Background.png");
+	backgroundrect.w = SCREEN_WIDTH+50;
+	backgroundrect.h = SCREEN_HEIGHT+50;
+	surfacebackground = IMG_Load("Assets/Background2.png");
 	texbackground = SDL_CreateTextureFromSurface(renderer, surfacebackground);
 	SDL_FreeSurface(surfacebackground);
-	SDL_RenderCopy(renderer, texbackground, NULL, &backgroundrect);
+	SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
 
+
+	//// PLATFORM GRAPHICS INIT ////
+	surfaceplatform = IMG_Load("Assets/Platform.png");
+	texplatform = SDL_CreateTextureFromSurface(renderer, surfaceplatform);
+	SDL_FreeSurface(surfaceplatform);
+
+	//// GRID GRAPHICS INIT ////
+	surfacegrid= IMG_Load("Assets/Grid.png");
+	texgrid = SDL_CreateTextureFromSurface(renderer, surfacegrid);
+	SDL_FreeSurface(surfacegrid);
+	SDL_RenderCopy(renderer, texgrid, NULL, &gridrect);
 
 	//// BALL GRAPHICS INIT ////
 	cell_surface = IMG_Load("Assets/Ball.png");
@@ -106,6 +140,9 @@ void Render::Init() {
 }
 
 void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actualweapon, float angle) {
+	//SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
+	SDL_RenderCopy(renderer, texgrid, NULL, &gridrect);
 
 	////////// PLAYERS BLIT //////////////
 	player1_rect.x = pos_player1.x;
@@ -113,6 +150,15 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 
 	player2_rect.x = pos_player2.x;
 	player2_rect.y = SCREEN_HEIGHT - (pos_player2.y + 32);
+
+	////////// PLATFORM BLIT //////////////
+	platform1rect.x = player1_rect.x - 50;
+	platform1rect.y = player1_rect.y +100;
+	SDL_RenderCopy(renderer, texplatform, NULL, &platform1rect);
+
+	platform2rect.x = player2_rect.x - 50;
+	platform2rect.y = player2_rect.y + 100;
+	SDL_RenderCopy(renderer, texplatform, NULL, &platform2rect);
 
 	////////// PROYECTILES || WEAPONS BLIT //////////////
 	bazooka_rect.x = player1_rect.x+5;
@@ -141,7 +187,7 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 
 void Render::Update(fPoint position) {
 	
-	SDL_RenderCopy(renderer, texbackground, NULL, &backgroundrect);
+	SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
 	particle_rect.x = position.x;
 	particle_rect.y = position.y;
 	

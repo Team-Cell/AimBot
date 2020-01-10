@@ -28,6 +28,7 @@ public:
 	SDL_Window *window;
 	float fps;
 	//SDL_Renderer *renderer;
+	Animation background_animation;
 	Animation idle_animation;
 
 	SDL_Renderer* renderer = nullptr;
@@ -60,5 +61,16 @@ public:
 	SDL_Rect backgroundrect;
 	SDL_Surface *surfacebackground;
 	SDL_Texture * texbackground;
+
+	//Background Surfaces & Textures
+	SDL_Rect gridrect;
+	SDL_Surface *surfacegrid;
+	SDL_Texture * texgrid;
+
+	//Platforms Surfaces & Textures
+	SDL_Rect platform1rect;
+	SDL_Rect platform2rect;
+	SDL_Surface *surfaceplatform;
+	SDL_Texture * texplatform;
 };
 #endif // !__Render_H__
