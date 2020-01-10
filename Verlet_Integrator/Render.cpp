@@ -182,7 +182,7 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 	}
 
 	////////// RENDER //////////////
-	SDL_RenderPresent(renderer);
+	//SDL_RenderPresent(renderer);
 }
 
 void Render::Update(fPoint position) {

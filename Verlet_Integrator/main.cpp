@@ -134,6 +134,7 @@ int main(int argc, char* args[]) {
 					render.blit_all(projectile.pos, worm, { (float)target.x,(float)target.y }, option, angle);
 					render.DrawQuad(rectangles[4], 255, 0, 0, 255);
 					render.DrawQuad(rectangles[5], 255, 0, 0, 255);
+					SDL_RenderPresent(render.renderer);
 				}
 				cout << endl;
 			}
