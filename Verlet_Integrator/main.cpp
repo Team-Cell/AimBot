@@ -31,6 +31,8 @@ int main(int argc, char* args[]) {
 	PhysicsEngine physics;
 	Audio audio;
 
+	int option = 1;
+
 	Weapon Grenade(20, 0.6, false, true);
 	Weapon Bazooka(20, 0, true, false);
 
@@ -48,8 +50,12 @@ int main(int argc, char* args[]) {
 
 	render.Init();
 	audio.Init();
-	audio.PlayMusic("Music/worms.ogg");
+
 	srand(time(NULL));
+	//audio.PlayMusic("Music/worms.ogg");
+	audio.LoadFx("Music/Explosion.wav");
+	audio.LoadFx("Music/Grenade_throwing.wav");
+	audio.LoadFx("Music/Bazooka_throwing.wav");
 
 	//main loop
 	while (exit == false)
@@ -161,6 +167,7 @@ int main(int argc, char* args[]) {
 				}
 			}
 			if (OnCollision(projectile, target)) {
+				audio.PlayFx(1);
 				break;
 			}
 
