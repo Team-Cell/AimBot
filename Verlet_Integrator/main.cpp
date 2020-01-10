@@ -30,7 +30,7 @@ int main(int argc, char* args[]) {
 	Render render;
 	PhysicsEngine physics;
 	Audio audio;
-
+	
 	int option = 1;
 
 	Weapon Grenade(20, 0.6, false, true);
@@ -53,7 +53,10 @@ int main(int argc, char* args[]) {
 	audio.Init();
 
 	srand(time(NULL));
-	audio.PlayMusic("Music/worms.ogg");
+	//audio.PlayMusic("Music/worms.ogg");
+	audio.LoadFx("Music/Explosion.wav");
+	audio.LoadFx("Music/Grenade_throwing.wav");
+	audio.LoadFx("Music/Bazooka_throwing.wav");
 
 	//main loop
 	while (exit == false)
@@ -90,9 +93,10 @@ int main(int argc, char* args[]) {
 
 				if (chosen_weapon == &Grenade)
 					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
+														
 				if (chosen_weapon == &Bazooka)
 					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
-
+				
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
 					fPoint temp = projectile.pos;
@@ -140,8 +144,10 @@ int main(int argc, char* args[]) {
 
 		if (chosen_weapon == &Grenade)
 				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, true);
+			
 		if (chosen_weapon == &Bazooka)
 				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
+						
 
 		for (int i = 0; i < 300; i++)
 		{
@@ -163,6 +169,7 @@ int main(int argc, char* args[]) {
 				}
 			}
 			if (OnCollision(projectile, target)) {
+				audio.PlayFx(1);
 				break;
 			}
 			render.blit_all(projectile.pos, worm, {target.x, target.y}, option, physics.final_angle);
