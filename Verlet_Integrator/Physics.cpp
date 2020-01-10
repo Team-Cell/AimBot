@@ -216,14 +216,14 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 }
 
 // Collsions
-bool OnCollision(Particle particle, Collider rectangle) {
+bool OnCollision(Particle particle, SDL_Rect rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
 		particle.pos.x + particle.w > rectangle.x &&
 		particle.pos.y < rectangle.y + rectangle.h &&
 		 particle.pos.y + particle.h > rectangle.y);
 }
 
-void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_coefficient) {
+void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient) {
 	int COLLIDER_MARGIN = 10;
 	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;

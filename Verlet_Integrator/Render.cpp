@@ -199,3 +199,15 @@ void Render::clearScreen() {
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texbackground, NULL, &backgroundrect);
 }
+
+bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) const
+{
+	bool ret = true;
+
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+
+	int result = SDL_RenderFillRect(renderer, &rect);
+
+	return ret;
+}

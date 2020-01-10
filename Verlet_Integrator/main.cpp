@@ -15,7 +15,7 @@ using namespace std;
 
 #define RECTANGLE_THICKNESS 200
 
-void HandleInput(int& option, int& Montecarlo, fPoint& worm, Collider& target);
+void HandleInput(int& option, int& Montecarlo, fPoint& worm, SDL_Rect& target);
 
 int main(int argc, char* args[]) {
 
@@ -24,7 +24,7 @@ int main(int argc, char* args[]) {
 	bool exit = false;
 
 	Particle projectile;
-	Collider target = {0,0,66,75};
+	SDL_Rect target = { 0,0,66,75 };
 	fPoint worm;
 
 	Render render;
@@ -37,11 +37,12 @@ int main(int argc, char* args[]) {
 	Weapon Bazooka(20, 0, true, false);
 
 	//screen limit rectangles
-	Collider rectangles[4];
-	Collider top_rectangle(0, -RECTANGLE_THICKNESS, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
-	Collider left_rectangle(-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS,SCREEN_HEIGHT);
-	Collider right_rectangle(SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT);
-	Collider bottom_rectangle(-RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2*RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
+
+	SDL_Rect rectangles[6];
+	SDL_Rect top_rectangle = { 0, -RECTANGLE_THICKNESS, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS };
+	SDL_Rect left_rectangle = {-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT};
+	SDL_Rect right_rectangle = { SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT };
+	SDL_Rect bottom_rectangle = { -RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS };
 
 	rectangles[0] = top_rectangle;
 	rectangles[1] = left_rectangle;
@@ -62,6 +63,11 @@ int main(int argc, char* args[]) {
 	{
 		int option = 1;
 		HandleInput(option, physics.Montecarlo, worm, target);
+
+		//worm platform
+		rectangles[4] = {(int) worm.x,(int)worm.y + 75, 168, 45 };
+		//target platform
+		rectangles[5] = { (int)target.x,(int)target.y + 75, 168, 45 };
 
 		if (option == 1) projectile.weapon = &Grenade;
 		if (option == 2) projectile.weapon = &Bazooka;
@@ -103,7 +109,7 @@ int main(int argc, char* args[]) {
 					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
 					projectile.prev_pos = temp;
 
-					for (int j = 0; j < 4; j++)
+					for (int j = 0; j < 6; j++)
 					{
 						if (OnCollision(projectile, rectangles[j])) {
 							if (projectile.weapon->bounce_coefficient != 0)
@@ -125,7 +131,9 @@ int main(int argc, char* args[]) {
 					}
 
 					//debug draw
-					render.blit_all(projectile.pos, worm, { target.x, target.y }, option, angle);
+					render.blit_all(projectile.pos, worm, { (float)target.x,(float)target.y }, option, angle);
+					render.DrawQuad(rectangles[4], 255, 0, 0, 255);
+					render.DrawQuad(rectangles[5], 255, 0, 0, 255);
 				}
 				cout << endl;
 			}
@@ -152,7 +160,7 @@ int main(int argc, char* args[]) {
 			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
 			projectile.prev_pos = temp;
 
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 6; j++)
 			{
 				if (OnCollision(projectile, rectangles[j])) {
 					if (projectile.weapon->bounce_coefficient != 0)
@@ -171,7 +179,7 @@ int main(int argc, char* args[]) {
 				break;
 			}
 
-			render.blit_all(projectile.pos, worm, {target.x, target.y}, option, physics.final_angle);
+			render.blit_all(projectile.pos, worm, {(float)target.x, (float)target.y}, option, physics.final_angle);
 		}
 
 		cout << endl;
@@ -185,7 +193,7 @@ int main(int argc, char* args[]) {
 	return 0;
 }
 
-void HandleInput(int& option, int& Montecarlo, fPoint& worm_position, Collider& target) {
+void HandleInput(int& option, int& Montecarlo, fPoint& worm_position, SDL_Rect& target) {
 
 	cout << "Which weapon do you prefer? "<< endl <<"1. Grenade " << endl << "2. Bazooka: " << endl;
 	cin >> option;

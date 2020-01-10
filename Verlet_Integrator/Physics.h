@@ -7,6 +7,8 @@
 #define GRAVITY 0.5
 #define DRAG_COEFFICIENT 1 
 
+#include "SDL_image/include/SDL_image.h"
+
 struct Weapon {
 	float initial_speed = 0;
 	float bounce_coefficient = 0;
@@ -97,13 +99,13 @@ fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
-void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, Collider target, Collider rectangles[4], PhysicsEngine physics);
+void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, SDL_Rect target, SDL_Rect rectangles[4], PhysicsEngine physics);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
 //collisions
-bool OnCollision(Particle particle, Collider rectangle);
-void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_coefficient);
+bool OnCollision(Particle particle, SDL_Rect rectangle);
+void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient);
 
 // To be deleted
 bool OnCollision(Particle projectile, Particle target);
