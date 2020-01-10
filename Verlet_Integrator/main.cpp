@@ -59,16 +59,16 @@ int main(int argc, char* args[]) {
 		if (option == 1) chosen_weapon = &Grenade;
 		if (option == 2) chosen_weapon = &Bazooka;
 
-		fPoint a = { 0,0 };
 		if (chosen_weapon->wind_activated == true) {
-			a = AddWind(a, physics.wind_acceleration);
+			projectile.a += {0, physics.wind_acceleration};
 		}
 		if (chosen_weapon->linear_trajectory == false) {
-			a = AddGravity(a);
+			projectile.a += { 0, -GRAVITY };
 		}
 		float angle;
 
-		while (physics.final_angle == 0) {
+		//find projectile path to hit the target
+		while ((physics.final_angle == 0) && (physics.Montecarlo_iterations < physics.Max_Montecarlo)) {
 			physics.Montecarlo_iterations++;
 			cout << "Montecarlo n " << physics.Montecarlo_iterations << endl;
 
@@ -85,14 +85,14 @@ int main(int argc, char* args[]) {
 				cout << "Angle " << angle << endl;
 
 				if (chosen_weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
+					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
 				if (chosen_weapon == &Bazooka)
-					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
+					projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
 
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
 					fPoint temp = projectile.pos;
-					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, physics.dt);
+					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
 					projectile.prev_pos = temp;
 
 					for (int j = 0; j < 4; j++)
@@ -118,7 +118,7 @@ int main(int argc, char* args[]) {
 					}
 
 					//debug draw
-					//render.blit_all(projectile.pos, worm, { target.x, target.y }, option, angle);
+					render.blit_all(projectile.pos, worm, { target.x, target.y }, option, angle);
 				}
 				cout << endl;
 			}
@@ -130,18 +130,19 @@ int main(int argc, char* args[]) {
 		projectile.prev_pos.x = worm.x + 5;
 		projectile.prev_pos.y = worm.y - 30;
 		angle = physics.final_angle;
+		if (physics.final_angle == 0) angle = 90;
 
 		cout << "Final angle " << angle << endl;
 
 		if (chosen_weapon == &Grenade)
-				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, true);
+				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, true);
 		if (chosen_weapon == &Bazooka)
-				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, a, false);
+				projectile.pos = Classical_Motion(projectile.prev_pos, chosen_weapon->initial_speed, angle, projectile.a, false);
 
-		for (int i = 0; i < physics.max_path_iterations; i++)
+		for (int i = 0; i < 300; i++)
 		{
 			fPoint temp = projectile.pos;
-			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, a, physics.dt);
+			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
 			projectile.prev_pos = temp;
 			for (int j = 0; j < 4; j++)
 			{

@@ -4,7 +4,7 @@
 #include "p2Point.h"
 
 #define PI 3.1416
-#define GRAVITY 9.81
+#define GRAVITY 0.5
 #define DRAG_COEFFICIENT 1 
 
 struct Weapon {
@@ -70,12 +70,16 @@ private:
 
 public:
 	float dt;
+
 	int Montecarlo;
 	int Montecarlo_iterations;
+	int Max_Montecarlo;
 	int max_path_iterations;
+
 	float final_angle;
 	int min_angle;
 	int max_angle;
+
 	float wind_acceleration;
 };
 
@@ -108,8 +112,6 @@ bool OnCollision(Particle projectile, Particle target);
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);
 float Module(fPoint var);
-fPoint AddWind(fPoint a, float wind);
-fPoint AddGravity(fPoint a);
 
 #endif // !_PHYSICS_H_
 

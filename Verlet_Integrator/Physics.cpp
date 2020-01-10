@@ -28,12 +28,16 @@ Particle::~Particle() {}
 PhysicsEngine::PhysicsEngine()
 {
 	dt = 1.0f;
+
 	Montecarlo = 10;
 	Montecarlo_iterations = 0;
+	Max_Montecarlo = 5;
 	max_path_iterations = 50;
+
 	final_angle = 0;
 	min_angle = 0;
 	max_angle = 80;
+
 	wind_acceleration = 0.2f;
 }
 
@@ -291,11 +295,3 @@ if ((particle.v.y < 0) && (particle.pos.x > rect.x) && particle.pos.x < rect.x +
 
 	//coming from right
 */
-fPoint AddWind(fPoint a, float wind) {
-	a.x -= wind;
-	return a;
-}
-fPoint AddGravity(fPoint a) {
-	a.y -= 0.5;
-	return a;
-}
