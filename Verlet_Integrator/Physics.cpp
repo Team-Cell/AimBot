@@ -32,7 +32,7 @@ PhysicsEngine::PhysicsEngine()
 	Montecarlo = 10;
 	Montecarlo_iterations = 0;
 	Max_Montecarlo = 5;
-	max_path_iterations = 50;
+	max_path_iterations = 60;
 
 	final_angle = 0;
 	min_angle = 0;
@@ -176,7 +176,7 @@ fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fP
 	return final_position;
 }
 
-void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, VRectangle target, VRectangle rectangles[4]) {
+void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, Collider target, Collider rectangles[4]) {
 
 }
 
@@ -226,7 +226,7 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 }
 
 // Collsions
-bool OnCollision(Particle particle, VRectangle rectangle) {
+bool OnCollision(Particle particle, Collider rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
 		particle.pos.x + particle.w > rectangle.x &&
 		particle.pos.y < rectangle.y + rectangle.h &&
@@ -240,7 +240,7 @@ bool OnCollision(Particle projectile, Particle target) {
 		projectile.pos.y + projectile.h > target.pos.y);
 }
 
-void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce_coefficient) {
+void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_coefficient) {
 	int COLLIDER_MARGIN = 10;
 	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;

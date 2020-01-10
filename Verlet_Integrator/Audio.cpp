@@ -18,7 +18,7 @@ Audio::~Audio()
 {}
 
 // Called before render is available
-bool Audio::Awake()
+bool Audio::Init()
 {
 	LOG("Loading Audio Mixer");
 	bool ret = true;

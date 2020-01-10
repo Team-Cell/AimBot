@@ -20,16 +20,16 @@ struct Weapon {
 	}
 };
 
-struct VRectangle {
+struct Collider {
 	float x = 0;
 	float y = 0;
 	float w = 0;
 	float h = 0;
 
-	VRectangle(){};
-	~VRectangle() {};
+	Collider(){};
+	~Collider() {};
 
-	VRectangle(float u_x, float u_y, float u_w, float u_h){
+	Collider(float u_x, float u_y, float u_w, float u_h){
 		x = u_x;
 		y = u_y;
 		w = u_w;
@@ -97,13 +97,13 @@ fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
-void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, VRectangle target, VRectangle rectangles[4], PhysicsEngine physics);
+void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, Collider target, Collider rectangles[4], PhysicsEngine physics);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
 //collisions
-bool OnCollision(Particle particle, VRectangle rectangle);
-void HandleCollision(Particle& particle, VRectangle rect, float dt, float bounce_coefficient);
+bool OnCollision(Particle particle, Collider rectangle);
+void HandleCollision(Particle& particle, Collider rect, float dt, float bounce_coefficient);
 
 // To be deleted
 bool OnCollision(Particle projectile, Particle target);

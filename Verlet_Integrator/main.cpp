@@ -15,7 +15,7 @@ using namespace std;
 
 #define RECTANGLE_THICKNESS 200
 
-void HandleInput(int& option, int& Montecarlo, fPoint& worm, VRectangle& target);
+void HandleInput(int& option, int& Montecarlo, fPoint& worm, Collider& target);
 
 int main(int argc, char* args[]) {
 
@@ -24,26 +24,25 @@ int main(int argc, char* args[]) {
 	bool exit = false;
 
 	Particle projectile;
-	//worms size may be changed
-	VRectangle target = {0,0,66,75};
+	Collider target = {0,0,66,75};
 	fPoint worm;
 
 	Render render;
 	PhysicsEngine physics;
-	Audio worms_music;
+	Audio audio;
 
-	int option = 2;
+	int option = 1;
 
 	Weapon Grenade(20, 0.6, false, true);
 	Weapon Bazooka(20, 0, true, false);
 	Weapon* chosen_weapon = nullptr;
 
 	//screen limit rectangles
-	VRectangle rectangles[4];
-	VRectangle top_rectangle(0, -RECTANGLE_THICKNESS, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
-	VRectangle left_rectangle(-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS,SCREEN_HEIGHT);
-	VRectangle right_rectangle(SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT);
-	VRectangle bottom_rectangle(-RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2*RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
+	Collider rectangles[4];
+	Collider top_rectangle(0, -RECTANGLE_THICKNESS, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
+	Collider left_rectangle(-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS,SCREEN_HEIGHT);
+	Collider right_rectangle(SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT);
+	Collider bottom_rectangle(-RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2*RECTANGLE_THICKNESS, RECTANGLE_THICKNESS);
 
 	rectangles[0] = top_rectangle;
 	rectangles[1] = left_rectangle;
@@ -51,12 +50,14 @@ int main(int argc, char* args[]) {
 	rectangles[3] = bottom_rectangle;
 
 	render.Init();
+	audio.Init();
+
 	srand(time(NULL));
-	worms_music.PlayMusic("Music/worms.ogg");
+	audio.PlayMusic("Music/worms.ogg");
+
 	//main loop
 	while (exit == false)
 	{
-		
 		HandleInput(option, physics.Montecarlo, worm, target);
 
 		if (option == 1) chosen_weapon = &Grenade;
@@ -169,6 +170,7 @@ int main(int argc, char* args[]) {
 		//
 		cout << endl;
 
+		physics.Montecarlo_iterations = 0;
 		physics.final_angle = 0;
 		option = 0;
 
@@ -179,7 +181,7 @@ int main(int argc, char* args[]) {
 	return 0;
 }
 
-void HandleInput(int& option, int& Montecarlo, fPoint& worm_position, VRectangle& target) {
+void HandleInput(int& option, int& Montecarlo, fPoint& worm_position, Collider& target) {
 
 	cout << "Which weapon do you prefer? "<< endl <<"1. Grenade " << endl << "2. Bazooka: " << endl;
 	cin >> option;

@@ -19,7 +19,7 @@ public:
 	virtual ~Audio();
 
 	// Called before render is available
-	bool Awake();
+	bool Init();
 
 	// Called before quitting
 	bool CleanUp();
