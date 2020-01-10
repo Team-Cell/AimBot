@@ -3,6 +3,7 @@
 #include <time.h>
 #include "Physics.h"
 #include "Render.h"
+#include "Audio.h"
 #include "p2Log.h"
 #include "SDL/include/SDL.h"
 #include "SDL_Image/include/SDL_image.h"
@@ -29,6 +30,7 @@ int main(int argc, char* args[]) {
 
 	Render render;
 	PhysicsEngine physics;
+	Audio worms_music;
 
 	int option = 2;
 
@@ -50,10 +52,11 @@ int main(int argc, char* args[]) {
 
 	render.Init();
 	srand(time(NULL));
-
+	worms_music.PlayMusic("Music/worms.ogg");
 	//main loop
 	while (exit == false)
 	{
+		
 		HandleInput(option, physics.Montecarlo, worm, target);
 
 		if (option == 1) chosen_weapon = &Grenade;
