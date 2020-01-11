@@ -223,6 +223,13 @@ bool OnCollision(Particle particle, SDL_Rect rectangle) {
 		 particle.pos.y + particle.h > rectangle.y);
 }
 
+bool OnCollision(SDL_Rect rect, SDL_Rect rectangle) {
+	return (rect.x < rectangle.x + rectangle.w &&
+		rect.x + rect.w > rectangle.x &&
+		rect.y < rectangle.y + rectangle.h &&
+		rect.y + rect.h > rectangle.y);
+}
+
 void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient) {
 	int COLLIDER_MARGIN = 10;
 	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;

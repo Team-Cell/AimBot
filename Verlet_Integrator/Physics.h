@@ -106,10 +106,7 @@ void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, f
 //collisions
 bool OnCollision(Particle particle, SDL_Rect rectangle);
 void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient);
-
-// To be deleted
-bool OnCollision(Particle projectile, Particle target);
-//
+bool OnCollision(SDL_Rect projectile, SDL_Rect target);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);

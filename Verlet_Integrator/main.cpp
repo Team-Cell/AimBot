@@ -37,17 +37,18 @@ int main(int argc, char* args[]) {
 	Weapon Bazooka(20, 0, true, false);
 
 	//screen limit rectangles
-
-	SDL_Rect rectangles[6];
+	SDL_Rect rectangles[7];
 	SDL_Rect top_rectangle = { 0, -RECTANGLE_THICKNESS, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS };
 	SDL_Rect left_rectangle = {-RECTANGLE_THICKNESS, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT};
 	SDL_Rect right_rectangle = { SCREEN_WIDTH, 0, RECTANGLE_THICKNESS, SCREEN_HEIGHT };
 	SDL_Rect bottom_rectangle = { -RECTANGLE_THICKNESS, SCREEN_HEIGHT, SCREEN_WIDTH + 2 * RECTANGLE_THICKNESS, RECTANGLE_THICKNESS };
+	SDL_Rect explosion_rect = {-1000,-1000, 125, 125};
 
 	rectangles[0] = top_rectangle;
 	rectangles[1] = left_rectangle;
 	rectangles[2] = right_rectangle;
 	rectangles[3] = bottom_rectangle;
+	rectangles[6] = explosion_rect;
 
 	render.Init();
 	audio.Init();
@@ -65,9 +66,9 @@ int main(int argc, char* args[]) {
 		HandleInput(option, physics.Montecarlo, worm, target);
 
 		//worm platform
-		rectangles[4] = {(int) worm.x,(int)worm.y + 75, 168, 45 };
+		rectangles[4] = {(int) worm.x - 50,800 - (int)worm.y + 70, 168, 45 };
 		//target platform
-		rectangles[5] = { (int)target.x,(int)target.y + 75, 168, 45 };
+		rectangles[5] = { (int)target.x - 50, 800- (int)target.y + 70, 168, 45 };
 
 		if (option == 1) projectile.weapon = &Grenade;
 		if (option == 2) projectile.weapon = &Bazooka;
@@ -127,15 +128,36 @@ int main(int argc, char* args[]) {
 						cout << "Target hit" << endl;
 						physics.final_angle = angle;
 						i++;
+						explosion_rect.x = projectile.pos.x - 45;
+						explosion_rect.y = 790 - projectile.pos.y - 50;
+						render.DrawQuad(explosion_rect, 0, 0, 255, 100);
+						SDL_RenderPresent(render.renderer);
 						break;
 					}
 
 					//debug draw
 					render.blit_all(projectile.pos, worm, { (float)target.x,(float)target.y }, option, angle);
-					render.DrawQuad(rectangles[4], 255, 0, 0, 255);
-					render.DrawQuad(rectangles[5], 255, 0, 0, 255);
+					//render.DrawQuad(rectangles[4], 0, 0, 255, 255);
+					//render.DrawQuad(rectangles[5], 0, 0, 255, 255);
 					SDL_RenderPresent(render.renderer);
 				}
+
+				//colateral explosion
+				if (physics.final_angle == 0)
+				{
+					explosion_rect.x = projectile.pos.x - 45;
+					explosion_rect.y = 790 - projectile.pos.y - 50;
+					render.DrawQuad(explosion_rect, 0, 0, 255, 100);
+					SDL_RenderPresent(render.renderer);
+
+					if (OnCollision(target, explosion_rect))
+					{
+						cout << "Target hit by explosion" << endl;
+						physics.final_angle = angle;
+						i++;
+					}
+				}
+
 				cout << endl;
 			}
 			cout << "=====================" << endl << endl;
