@@ -32,9 +32,13 @@ PhysicsEngine::PhysicsEngine()
 	Max_Montecarlo = 5;
 	max_path_iterations = 60;
 
-	final_angle = 0;
 	min_angle = 0;
 	max_angle = 80;
+	final_angle = 0;
+
+	min_speed = 10;
+	max_speed = 40;
+	final_speed = 0;
 
 	wind_acceleration = 0.2f;
 }

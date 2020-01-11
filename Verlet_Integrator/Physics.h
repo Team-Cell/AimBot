@@ -78,9 +78,13 @@ public:
 	int Max_Montecarlo;
 	int max_path_iterations;
 
-	float final_angle;
 	int min_angle;
 	int max_angle;
+	float final_angle;
+
+	int max_speed;
+	int min_speed;
+	float final_speed;
 
 	float wind_acceleration;
 };

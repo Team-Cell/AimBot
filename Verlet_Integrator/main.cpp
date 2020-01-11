@@ -94,7 +94,14 @@ int main(int argc, char* args[]) {
 				angle = rand() % (physics.max_angle - physics.min_angle) * 100 + 1;
 				angle += physics.min_angle;
 				angle *= 0.01;
-				cout << "Angle " << angle << endl;
+				cout << "Angle: " << angle << endl;
+
+				if (projectile.weapon == &Grenade)
+				{
+					float speed_difference = rand() % (physics.max_speed - physics.min_speed);
+					projectile.weapon->initial_speed = physics.min_speed + speed_difference;
+					cout << "Speed: " << projectile.weapon->initial_speed << endl;
+				}
 
 				projectile.prev_pos.x = worm.x + 5;
 				projectile.prev_pos.y = worm.y - 30;
@@ -127,6 +134,7 @@ int main(int argc, char* args[]) {
 					if (OnCollision(projectile, target)) {
 						cout << "Target hit" << endl;
 						physics.final_angle = angle;
+						physics.final_speed = projectile.weapon->initial_speed;
 						i++;
 						explosion_rect.x = projectile.pos.x - 45;
 						explosion_rect.y = 790 - projectile.pos.y - 50;
@@ -154,7 +162,7 @@ int main(int argc, char* args[]) {
 					{
 						cout << "Target hit by explosion" << endl;
 						physics.final_angle = angle;
-						i++;
+						physics.final_speed = projectile.weapon->initial_speed;
 					}
 				}
 
@@ -167,7 +175,9 @@ int main(int argc, char* args[]) {
 
 		angle = physics.final_angle;
 		if (physics.final_angle == 0) angle = 90;
-		cout << "Final angle " << angle << endl;
+
+		cout << "Final angle: " << angle << endl;
+		cout << "Final speed: " << physics.final_speed << endl;
 
 		projectile.prev_pos.x = worm.x + 5;
 		projectile.prev_pos.y = worm.y - 30;
