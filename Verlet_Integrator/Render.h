@@ -23,6 +23,7 @@ public:
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) const;
 	void Update(fPoint pos);
 	void clearScreen();
+	void printExplosion(SDL_Rect& explosionrect);
 	SDL_Point center;
 
 public:
@@ -31,6 +32,7 @@ public:
 	//SDL_Renderer *renderer;
 	Animation background_animation;
 	Animation idle_animation;
+	Animation explosion_animation;
 
 	SDL_Renderer* renderer = nullptr;
 	SDL_Rect* ball;
@@ -73,5 +75,9 @@ public:
 	SDL_Rect platform2rect;
 	SDL_Surface *surfaceplatform;
 	SDL_Texture * texplatform;
+
+	//Explosion Surfaces & Textures
+	SDL_Surface *surfaceexplosion;
+	SDL_Texture * texexplosion;
 };
 #endif // !__Render_H__

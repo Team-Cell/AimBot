@@ -140,6 +140,7 @@ int main(int argc, char* args[]) {
 						explosion_rect.y = 790 - projectile.pos.y - 50;
 						render.DrawQuad(explosion_rect, 0, 0, 255, 100);
 						SDL_RenderPresent(render.renderer);
+						render.printExplosion(explosion_rect);
 						break;
 					}
 

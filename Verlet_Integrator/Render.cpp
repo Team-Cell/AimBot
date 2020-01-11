@@ -47,6 +47,7 @@ Render::Render() {
 	center.x = 31;
 	center.y = 15;
 
+
 	/////IDLE ANIMATION//////
 	idle_animation.PushBack({ 0, 0, 66, 75 });
 	idle_animation.PushBack({ 66, 0, 66, 75 });
@@ -70,7 +71,7 @@ Render::Render() {
 	idle_animation.PushBack({ 594, 75, 66, 75 });
 	idle_animation.speed = 0.07f;
 
-	/////IDLE ANIMATION//////
+	/////BACKGROUND ANIMATION//////
 	background_animation.PushBack({ 0, 0, 800, 800 });
 	background_animation.PushBack({ 800, 0, 800, 800 });
 	background_animation.PushBack({ 1600, 0, 800, 800 });
@@ -81,6 +82,16 @@ Render::Render() {
 	background_animation.PushBack({ 2400, 800, 800, 800 });
 	background_animation.speed = 0.2f;
 
+	/////EXPLOSION ANIMATION//////
+	explosion_animation.PushBack({ 0, 0, 114, 114 });
+	explosion_animation.PushBack({ 114, 0, 114, 114 });
+	explosion_animation.PushBack({ 228, 0, 114, 114 });
+	explosion_animation.PushBack({ 342, 0, 114, 114 });
+	explosion_animation.PushBack({ 0, 114, 114, 114 });
+	explosion_animation.PushBack({ 114, 114, 114, 114 });
+	explosion_animation.PushBack({ 228, 114, 114, 114 });
+	explosion_animation.PushBack({ 342, 114, 114, 114 });
+	explosion_animation.speed = 0.2f;
 }
 Render::~Render() {}
 
@@ -98,6 +109,10 @@ void Render::Init() {
 	SDL_FreeSurface(surfacebackground);
 	SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
 
+	//// PLATFORM GRAPHICS INIT ////
+	surfaceexplosion = IMG_Load("Assets/Explosion.png");
+	texexplosion = SDL_CreateTextureFromSurface(renderer, surfaceexplosion);
+	SDL_FreeSurface(surfaceexplosion);
 
 	//// PLATFORM GRAPHICS INIT ////
 	surfaceplatform = IMG_Load("Assets/Platform.png");
@@ -140,7 +155,7 @@ void Render::Init() {
 }
 
 void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actualweapon, float angle) {
-	//SDL_RenderClear(renderer);
+	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
 	SDL_RenderCopy(renderer, texgrid, NULL, &gridrect);
 
@@ -210,4 +225,22 @@ bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) 
 	int result = SDL_RenderFillRect(renderer, &rect);
 
 	return ret;
+}
+
+void Render::printExplosion(SDL_Rect& explosionrect) {
+
+	while (explosion_animation.finished == 0) {
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
+		SDL_RenderCopy(renderer, texgrid, NULL, &gridrect);
+
+		SDL_RenderCopy(renderer, texplatform, NULL, &platform1rect);
+		SDL_RenderCopy(renderer, texplatform, NULL, &platform2rect);
+		SDL_RenderCopyEx(renderer, player1_tex, &(idle_animation.GetCurrentFrame()), &player1_rect, 0, 0, SDL_FLIP_HORIZONTAL);
+		SDL_RenderCopyEx(renderer, player2_tex, &(idle_animation.GetCurrentFrame()), &player2_rect, 0, 0, SDL_FLIP_NONE);
+		SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
+		
+		SDL_RenderCopy(renderer, texexplosion, &(explosion_animation.GetCurrentFrame()), &explosionrect);
+		SDL_RenderPresent(renderer);
+	}
 }
