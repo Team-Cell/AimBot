@@ -5,7 +5,9 @@
 
 Render::Render() {
 	ball = nullptr;
-	fps = 30;
+	framerate_cap = 30;
+	cap_miliseconds = 1 / framerate_cap * 1000;
+	delay = 0;
 	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO);
 
 	window = SDL_CreateWindow("Aimbot - Worms Simulation", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT,0);

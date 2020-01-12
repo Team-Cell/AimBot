@@ -32,6 +32,8 @@ int main(int argc, char* args[]) {
 	Audio audio;
 
 	int option = 1;
+	float timer = 0;
+	float dt = 0;
 
 	Weapon Grenade(20, 0.6, false, true);
 	Weapon Bazooka(20, 0, true, false);
@@ -68,7 +70,7 @@ int main(int argc, char* args[]) {
 		//worm platform
 		rectangles[4] = {(int) worm.x - 50,800 - (int)worm.y + 70, 168, 45 };
 		//target platform
-		rectangles[5] = { (int)target.x - 50, 800- (int)target.y + 70, 168, 45 };
+		rectangles[5] = { (int)target.x - 50, 800- (int)target.y + target.h, 168, 45 };
 
 		if (option == 1) projectile.weapon = &Grenade;
 		if (option == 2) projectile.weapon = &Bazooka;
@@ -110,6 +112,7 @@ int main(int argc, char* args[]) {
 					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, true);
 				if (projectile.weapon == &Bazooka)
 					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
+				timer = SDL_GetTicks();
 
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
@@ -139,16 +142,24 @@ int main(int argc, char* args[]) {
 						explosion_rect.x = projectile.pos.x - 45;
 						explosion_rect.y = 790 - projectile.pos.y - 50;
 						render.DrawQuad(explosion_rect, 0, 0, 255, 100);
-						SDL_RenderPresent(render.renderer);
 						render.printExplosion(explosion_rect);
+						SDL_RenderPresent(render.renderer);
 						break;
 					}
 
 					//debug draw
+					dt = SDL_GetTicks();
+					dt -= timer;
+					if (dt > 0)
+					{
+						render.delay = render.cap_miliseconds - dt;
+						SDL_Delay(render.delay);
+					}
 					render.blit_all(projectile.pos, worm, { (float)target.x,(float)target.y }, option, angle);
-					//render.DrawQuad(rectangles[4], 0, 0, 255, 255);
-					//render.DrawQuad(rectangles[5], 0, 0, 255, 255);
+					render.DrawQuad(rectangles[4], 0, 0, 255, 255);
+					render.DrawQuad(rectangles[5], 0, 0, 255, 255);
 					SDL_RenderPresent(render.renderer);
+					timer = SDL_GetTicks();
 				}
 
 				//colateral explosion
@@ -156,7 +167,7 @@ int main(int argc, char* args[]) {
 				{
 					explosion_rect.x = projectile.pos.x - 45;
 					explosion_rect.y = 790 - projectile.pos.y - 50;
-					render.DrawQuad(explosion_rect, 0, 0, 255, 100);
+					render.printExplosion(explosion_rect);
 					SDL_RenderPresent(render.renderer);
 
 					if (OnCollision(target, explosion_rect))
@@ -166,7 +177,6 @@ int main(int argc, char* args[]) {
 						physics.final_speed = projectile.weapon->initial_speed;
 					}
 				}
-
 				cout << endl;
 			}
 			cout << "=====================" << endl << endl;
@@ -188,6 +198,7 @@ int main(int argc, char* args[]) {
 		if (projectile.weapon == &Bazooka)
 				projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
 
+		timer = SDL_GetTicks();
 		for (int i = 0; i < 300; i++)
 		{
 			fPoint temp = projectile.pos;
@@ -209,11 +220,21 @@ int main(int argc, char* args[]) {
 				}
 			}
 			if (OnCollision(projectile, target)) {
+				render.printExplosion(explosion_rect);
+				SDL_RenderPresent(render.renderer);
 				audio.PlayFx(1);
 				break;
 			}
 
+			dt = SDL_GetTicks();
+			dt -= timer;
+			if (dt > 0)
+			{
+				render.delay = render.cap_miliseconds - dt;
+				SDL_Delay(render.delay);
+			}
 			render.blit_all(projectile.pos, worm, {(float)target.x, (float)target.y}, option, physics.final_angle);
+			timer = SDL_GetTicks();
 		}
 
 		cout << endl;

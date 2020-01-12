@@ -28,7 +28,9 @@ public:
 
 public:
 	SDL_Window *window;
-	float fps;
+	float framerate_cap;
+	float cap_miliseconds;
+	float delay;
 	//SDL_Renderer *renderer;
 	Animation background_animation;
 	Animation idle_animation;
