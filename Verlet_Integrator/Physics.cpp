@@ -195,10 +195,6 @@ fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fP
 	return final_position;
 }
 
-void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, Collider target, Collider rectangles[4]) {
-
-}
-
 //additional formulas
 
 fPoint Forces_Sum(fPoint f1, fPoint f2) {

@@ -103,7 +103,6 @@ fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool friction, float dt = 1.0f);
-void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, SDL_Rect target, SDL_Rect rectangles[4], PhysicsEngine physics);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
