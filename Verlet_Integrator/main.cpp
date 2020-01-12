@@ -36,7 +36,7 @@ int main(int argc, char* args[]) {
 	float dt = 0;
 
 	Weapon Grenade(20, 0.6, false, true);
-	Weapon Bazooka(20, 0, true, false);
+	Weapon Bazooka(30, 0, true, false);
 
 	//screen limit rectangles
 	SDL_Rect rectangles[7];
@@ -108,16 +108,13 @@ int main(int argc, char* args[]) {
 				projectile.prev_pos.x = worm.x + 5;
 				projectile.prev_pos.y = worm.y - 30;
 
-				if (projectile.weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
-				if (projectile.weapon == &Bazooka)
-					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
+				projectile.pos = CalculatePos(projectile.prev_pos, { 0,0 }, projectile.a, 1.0, projectile.area,projectile.mass,	projectile.weapon->initial_speed, angle, true);
 				timer = SDL_GetTicks();
 
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
 					fPoint temp = projectile.pos;
-					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
+					projectile.pos = CalculatePos(projectile.pos, projectile.prev_pos, projectile.a, physics.dt, projectile.area, projectile.mass);
 					projectile.prev_pos = temp;
 
 					for (int j = 0; j < 6; j++)
@@ -193,16 +190,13 @@ int main(int argc, char* args[]) {
 		projectile.prev_pos.x = worm.x + 5;
 		projectile.prev_pos.y = worm.y - 30;
 
-		if (projectile.weapon == &Grenade)
-				projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, true);
-		if (projectile.weapon == &Bazooka)
-				projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
+		projectile.pos = CalculatePos(projectile.prev_pos, { 0,0 }, projectile.a, 1.0, projectile.area, projectile.mass, projectile.weapon->initial_speed, angle, true);
 
 		timer = SDL_GetTicks();
 		for (int i = 0; i < 300; i++)
 		{
 			fPoint temp = projectile.pos;
-			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
+			projectile.pos = CalculatePos(projectile.pos, projectile.prev_pos, projectile.a, physics.dt, projectile.area, projectile.mass);
 			projectile.prev_pos = temp;
 
 			for (int j = 0; j < 6; j++)

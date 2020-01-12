@@ -6,6 +6,7 @@
 #define PI 3.1416
 #define GRAVITY 0.5
 #define DRAG_COEFFICIENT 1 
+#define AIR_DENSITY 1.22
 
 #include "SDL_image/include/SDL_image.h"
 
@@ -53,7 +54,6 @@ public:
 
 	float	density;
 	float	area;
-	float	drag_coeficient;
 	float	dt;
 	float	mass;
 	int		w;
@@ -89,6 +89,9 @@ public:
 	float wind_acceleration;
 };
 
+//Calculate position with drag
+fPoint CalculatePos(fPoint pos, fPoint prev_pos, fPoint ai, float dt, float area, float mass, float v_projectile = 0.0f, float angle = 0.0f, bool classical_motion = false);
+
 //main verlet
 fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint ai, float dt);
 fPoint Velocity_Verlet(fPoint vi, fPoint ai, fPoint a_new, float dt);
@@ -102,7 +105,7 @@ fPoint Calculate_Acceleration(fPoint force, float mass);
 fPoint AccelerationSum(Particle particle);
 
 //position calculators 
-fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
+fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, float dt = 1.0f);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
