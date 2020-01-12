@@ -107,7 +107,7 @@ int main(int argc, char* args[]) {
 				projectile.prev_pos.y = worm.y - 30;
 
 				if (projectile.weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
+					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, true);
 				if (projectile.weapon == &Bazooka)
 					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
 
