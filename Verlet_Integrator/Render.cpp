@@ -232,6 +232,9 @@ bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) 
 void Render::printExplosion(SDL_Rect& explosionrect) {
 
 	while (explosion_animation.finished == 0) {
+
+		
+		
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
 		SDL_RenderCopy(renderer, texgrid, NULL, &gridrect);
@@ -241,8 +244,23 @@ void Render::printExplosion(SDL_Rect& explosionrect) {
 		SDL_RenderCopyEx(renderer, player1_tex, &(idle_animation.GetCurrentFrame()), &player1_rect, 0, 0, SDL_FLIP_HORIZONTAL);
 		SDL_RenderCopyEx(renderer, player2_tex, &(idle_animation.GetCurrentFrame()), &player2_rect, 0, 0, SDL_FLIP_NONE);
 		SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
-		
+
 		SDL_RenderCopy(renderer, texexplosion, &(explosion_animation.GetCurrentFrame()), &explosionrect);
+		
 		SDL_RenderPresent(renderer);
 	}
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
+	SDL_RenderCopy(renderer, texgrid, NULL, &gridrect);
+
+	SDL_RenderCopy(renderer, texplatform, NULL, &platform1rect);
+	SDL_RenderCopy(renderer, texplatform, NULL, &platform2rect);
+	SDL_RenderCopyEx(renderer, player1_tex, &(idle_animation.GetCurrentFrame()), &player1_rect, 0, 0, SDL_FLIP_HORIZONTAL);
+	
+	SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
+
+	
+	SDL_RenderPresent(renderer);
+	
+	
 }
