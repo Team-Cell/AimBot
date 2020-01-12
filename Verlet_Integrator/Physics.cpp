@@ -237,27 +237,28 @@ bool OnCollision(SDL_Rect rect, SDL_Rect rectangle) {
 void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient) {
 	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;
+	rect.y = 800 - rect.y;
 
 	//colliding from up
-	if ((particle.pos.y + particle.h > rect.y) && (particle.pos.x > rect.x) && (particle.pos.y < rect.y + rect.h))
+	if ((particle.pos.y - particle.h < rect.y) && (particle.pos.x > rect.x) && (particle.pos.y < rect.y - rect.h))
 	{
 		particle.v.y = -particle.v.y * bounce_coefficient;
 	}
 
 	//colliding from down
-	if ((particle.pos.y - particle.h < rect.y + rect.h) && (particle.pos.y > rect.y) && (particle.pos.x > rect.x))
+	if ((particle.pos.y < rect.y - rect.h) && (particle.pos.y < rect.y) && (particle.pos.x > rect.x))
 	{
 		particle.v.y = -particle.v.y * bounce_coefficient;
 	}
 
 	//colliding from left
-	if ((particle.pos.x + particle.w > rect.x) && (particle.pos.y > rect.y) && (particle.pos.x < rect.x + rect.w))
+	if ((particle.pos.x + particle.w > rect.x) && (particle.pos.y < rect.y) && (particle.pos.x < rect.x + rect.w))
 	{
 		particle.v.x = -particle.v.x * bounce_coefficient;
 	}
 
-	//volliding from right
-	if ((particle.pos.x > rect.x) && (particle.pos.y > rect.y) && (particle.pos.x < rect.x + rect.w))
+	//colliding from right
+	if ((particle.pos.x > rect.x) && (particle.pos.y < rect.y) && (particle.pos.x < rect.x + rect.w))
 	{
 		particle.v.x = -particle.v.x * bounce_coefficient;
 	}
