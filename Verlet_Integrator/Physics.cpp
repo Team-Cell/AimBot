@@ -235,38 +235,31 @@ bool OnCollision(SDL_Rect rect, SDL_Rect rectangle) {
 }
 
 void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient) {
-	int COLLIDER_MARGIN = 10;
 	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;
 
-	//going down
-	if (particle.v.y < 0)
+	//colliding from up
+	if ((particle.pos.y + particle.h > rect.y) && (particle.pos.x > rect.x) && (particle.pos.y < rect.y + rect.h))
 	{
-		//colliding with the floor
-		if (particle.pos.y < rect.y + COLLIDER_MARGIN)
-		{
-			particle.v.y = -particle.v.y * bounce_coefficient;
-		}
-		//colliding with one of the two walls
-		else
-		{
-			particle.v.x = -particle.v.x * bounce_coefficient;
-		}
+		particle.v.y = -particle.v.y * bounce_coefficient;
 	}
 
-	//going up
-	else
+	//colliding from down
+	if ((particle.pos.y - particle.h < rect.y + rect.h) && (particle.pos.y > rect.y) && (particle.pos.x > rect.x))
 	{
-		//colliding with ceiling
-		if (particle.pos.y < rect.y + rect.h - COLLIDER_MARGIN)
-		{
-			particle.v.y = -particle.v.y * bounce_coefficient;
-		}
-		//colliding with one of the two walls
-		else
-		{
-			particle.v.x = -particle.v.x * bounce_coefficient;
-		}
+		particle.v.y = -particle.v.y * bounce_coefficient;
+	}
+
+	//colliding from left
+	if ((particle.pos.x + particle.w > rect.x) && (particle.pos.y > rect.y) && (particle.pos.x < rect.x + rect.w))
+	{
+		particle.v.x = -particle.v.x * bounce_coefficient;
+	}
+
+	//volliding from right
+	if ((particle.pos.x > rect.x) && (particle.pos.y > rect.y) && (particle.pos.x < rect.x + rect.w))
+	{
+		particle.v.x = -particle.v.x * bounce_coefficient;
 	}
 
 	particle.prev_pos.x = particle.pos.x;
