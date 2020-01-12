@@ -90,7 +90,7 @@ public:
 };
 
 //main verlet
-fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint ai, float dt);
+fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint ai, float dt, float drag_coefficient);
 fPoint Velocity_Verlet(fPoint vi, fPoint ai, fPoint a_new, float dt);
 fPoint Stormer_Verlet(fPoint pos, fPoint pos_new, fPoint a, float dt);
 fPoint Verlet_Acceleration(float m, fPoint total_f);
@@ -102,7 +102,7 @@ fPoint Calculate_Acceleration(fPoint force, float mass);
 fPoint AccelerationSum(Particle particle);
 
 //position calculators 
-fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
+fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool friction, float dt = 1.0f);
 void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, SDL_Rect target, SDL_Rect rectangles[4], PhysicsEngine physics);
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);

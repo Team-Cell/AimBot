@@ -109,7 +109,7 @@ int main(int argc, char* args[]) {
 				projectile.prev_pos.y = worm.y - 30;
 
 				if (projectile.weapon == &Grenade)
-					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
+					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, true);
 				if (projectile.weapon == &Bazooka)
 					projectile.pos = Classical_Motion(projectile.prev_pos, projectile.weapon->initial_speed, angle, projectile.a, false);
 				timer = SDL_GetTicks();
@@ -117,7 +117,7 @@ int main(int argc, char* args[]) {
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
 					fPoint temp = projectile.pos;
-					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
+					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt, DRAG_COEFFICIENT);
 					projectile.prev_pos = temp;
 
 					for (int j = 0; j < 6; j++)
@@ -202,7 +202,7 @@ int main(int argc, char* args[]) {
 		for (int i = 0; i < 300; i++)
 		{
 			fPoint temp = projectile.pos;
-			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
+			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt, DRAG_COEFFICIENT);
 			projectile.prev_pos = temp;
 
 			for (int j = 0; j < 6; j++)
