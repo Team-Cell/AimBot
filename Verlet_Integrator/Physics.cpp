@@ -48,9 +48,9 @@ PhysicsEngine::~PhysicsEngine()
 }
 
 //main verlet
-fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint a, float dt, float drag_coefficient) {
+fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint a, float dt) {
 
-	pos = pos + (pos - prev_pos) + a * drag_coefficient * dt * dt;
+	pos = pos + (pos - prev_pos) + a * dt * dt;
 
 	return pos;
 }
@@ -162,32 +162,15 @@ float Freefall_Acceleration(float gravity, float m, float friction_const) {
 
 //position calculators
 
-fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool friction, float dt) {
+fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt) {
 	fPoint final_position;
 	fPoint velocity;
 
-	/* Code from MATLAB example
-	% Compute aerodynamic drag force on particle
-    vw = v - wind; % Particle velocity (wind reference frame)
-    vu = vw / norm(vw); % Unitary particle-wind velocity vector
-    Fd = 0.5 * rho * vw .* vw * S * DRAG_COEFFICIENT .* -vu; % Drag force
-	*/
-
-	fPoint wind = { 5, 1 };
-	fPoint vw = velocity - wind;
-	fPoint vu = vw / (sqrt(pow(vw.x, 2) + pow(vw.y, 2)));
-	//fPoint Fd = 0.5f * 1.225f * vw * vw * 0.1f * DRAG_COEFFICIENT * - (vu.x + vu.y);
-
 	//CONVERT TO ANGLES
-	if (friction)
-	{
-		//velocity.x = (initial_velocity- Fd) * cos(angle * PI / 180);
-		//velocity.y = (initial_velocity- Fd) * sin(angle * PI / 180);
-	}else
-	{
-		velocity.x = initial_velocity * cos(angle * PI / 180);
-		velocity.y = initial_velocity * sin(angle * PI / 180);
-	}
+	velocity.x = initial_velocity * cos(angle * PI / 180);
+	velocity.y = initial_velocity * sin(angle * PI / 180);
+
+	if (gravity) velocity.y -= GRAVITY;
 
 	final_position.x = position.x + velocity.x * dt + 0.5f * acceleration.x * dt * dt;
 	final_position.y = position.y + velocity.y * dt + 0.5f * acceleration.y * dt * dt;
