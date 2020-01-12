@@ -229,7 +229,7 @@ bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) 
 	return ret;
 }
 
-void Render::printExplosion(SDL_Rect& explosionrect) {
+void Render::printExplosion(SDL_Rect& explosionrect, bool destroy_enemy) {
 
 	while (explosion_animation.finished == 0) {
 		SDL_RenderClear(renderer);
@@ -244,5 +244,20 @@ void Render::printExplosion(SDL_Rect& explosionrect) {
 		
 		SDL_RenderCopy(renderer, texexplosion, &(explosion_animation.GetCurrentFrame()), &explosionrect);
 		SDL_RenderPresent(renderer);
+	}
+
+	explosion_animation.Reset();
+	explosion_animation.finished = 0;
+	if (destroy_enemy == true) {
+		for (int i = 0; i < 300; i++) {
+			SDL_RenderClear(renderer);
+			SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
+			SDL_RenderCopy(renderer, texgrid, NULL, &gridrect);
+
+			SDL_RenderCopy(renderer, texplatform, NULL, &platform1rect);
+			SDL_RenderCopy(renderer, texplatform, NULL, &platform2rect);
+			SDL_RenderCopyEx(renderer, player1_tex, &(idle_animation.GetCurrentFrame()), &player1_rect, 0, 0, SDL_FLIP_HORIZONTAL);
+			SDL_RenderPresent(renderer);
+		}
 	}
 }

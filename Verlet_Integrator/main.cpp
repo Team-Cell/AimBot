@@ -142,8 +142,8 @@ int main(int argc, char* args[]) {
 						explosion_rect.x = projectile.pos.x - 45;
 						explosion_rect.y = 790 - projectile.pos.y - 50;
 						render.DrawQuad(explosion_rect, 0, 0, 255, 100);
-						render.printExplosion(explosion_rect);
-						SDL_RenderPresent(render.renderer);
+						audio.PlayFx(1);
+						render.printExplosion(explosion_rect, true);
 						break;
 					}
 
@@ -167,8 +167,8 @@ int main(int argc, char* args[]) {
 				{
 					explosion_rect.x = projectile.pos.x - 45;
 					explosion_rect.y = 790 - projectile.pos.y - 50;
-					render.printExplosion(explosion_rect);
-					SDL_RenderPresent(render.renderer);
+					audio.PlayFx(1);
+					render.printExplosion(explosion_rect, false);
 
 					if (OnCollision(target, explosion_rect))
 					{
@@ -218,12 +218,6 @@ int main(int argc, char* args[]) {
 						break;
 					}
 				}
-			}
-			if (OnCollision(projectile, target)) {
-				render.printExplosion(explosion_rect);
-				SDL_RenderPresent(render.renderer);
-				audio.PlayFx(1);
-				break;
 			}
 
 			dt = SDL_GetTicks();
