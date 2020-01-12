@@ -215,11 +215,19 @@ float Module(fPoint var) {
 }
 
 // Collsions
-bool OnCollision(Particle particle, SDL_Rect rectangle) {
-	return (particle.pos.x < rectangle.x + rectangle.w &&
-		particle.pos.x + particle.w > rectangle.x &&
-		SCREEN_HEIGHT - particle.pos.y < rectangle.y + rectangle.h &&
-		SCREEN_HEIGHT - particle.pos.y + particle.h > rectangle.y);
+bool OnCollision(Particle particle, SDL_Rect rectangle, bool flip_y) {
+	if (flip_y == true) {
+		return (particle.pos.x < rectangle.x + rectangle.w &&
+			particle.pos.x + particle.w > rectangle.x &&
+			SCREEN_HEIGHT - particle.pos.y < rectangle.y + rectangle.h &&
+			SCREEN_HEIGHT - particle.pos.y + particle.h > rectangle.y);
+	}
+	else {
+		return (particle.pos.x < rectangle.x + rectangle.w &&
+			particle.pos.x + particle.w > rectangle.x &&
+			particle.pos.y < rectangle.y + rectangle.h &&
+			particle.pos.y + particle.h > rectangle.y);
+	}
 }
 
 bool OnCollision(SDL_Rect rect, SDL_Rect rectangle) {

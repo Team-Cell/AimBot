@@ -131,7 +131,7 @@ int main(int argc, char* args[]) {
 							}
 						}
 					}
-					if (OnCollision(projectile, target)) {
+					if (OnCollision(projectile, target, false)) {
 						cout << "Target hit" << endl;
 						physics.final_angle = angle;
 						physics.final_speed = projectile.weapon->initial_speed;

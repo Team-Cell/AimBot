@@ -110,7 +110,7 @@ fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fP
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
 //collisions
-bool OnCollision(Particle particle, SDL_Rect rectangle);
+bool OnCollision(Particle particle, SDL_Rect rectangle, bool flip_y = true);
 void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient);
 bool OnCollision(SDL_Rect projectile, SDL_Rect target);
 
