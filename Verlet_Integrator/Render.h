@@ -23,7 +23,7 @@ public:
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) const;
 	void Update(fPoint pos);
 	void clearScreen();
-	void printExplosion(SDL_Rect& explosionrect);
+	void printExplosion(SDL_Rect& explosionrect, bool destroy_enemy);
 	SDL_Point center;
 
 public:
