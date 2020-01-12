@@ -29,7 +29,7 @@ PhysicsEngine::PhysicsEngine()
 	Montecarlo = 10;
 	Montecarlo_iterations = 0;
 	Max_Montecarlo = 5;
-	max_path_iterations = 80;
+	max_path_iterations = 130;
 
 	min_angle = 0;
 	max_angle = 80;
@@ -39,7 +39,7 @@ PhysicsEngine::PhysicsEngine()
 	max_speed = 40;
 	final_speed = 0;
 
-	wind_acceleration = 0.2f;
+	wind_acceleration = 0.3f;
 }
 
 PhysicsEngine::~PhysicsEngine()
@@ -157,9 +157,6 @@ fPoint AccelerationSum(Particle particle) {
 	{
 		accelerationSum.x = DragAcceleration(particle.density, particle.area, particle.v, particle.mass).x;
 		accelerationSum.y = particle.gravity + DragAcceleration(particle.density, particle.area, particle.v, particle.mass).y;
-		/* +Freefall_Acceleration(particle.gravity, particle.mass, particle.drag_coeficient) /*+ Parachutist_Acceleration(particle.mass, particle.v.y, particle.gravity, particle.k)*/;
-		/*To calculate gravitational acceleration we can use the new function of calculate acceleration with the force being the gravity and the mass the bullet's mass (it could
-		change depending of the weapon used)*/
 	}
 	else
 	{
@@ -217,27 +214,6 @@ float Module(fPoint var) {
 
 }
 
-//here we calculate inicialize the inicial variables in orther to calculate physics later
-void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density)
-{
-	/*
-	float ff = tf * fps;
-	
-	for ( int i = 1; i < ff; i++)
-	{
-		//compute frame time step
-		dt = 1.0 / fps;
-
-		float Fg = mass * gravity;
-
-		fPoint vw = v - wind;
-		fPoint vu = vw / sqrt(pow(vw.x, 2), pow(vw.y, 2));
-		float Fd = 0.5 * density * vw.x * vw.y *
-
-	}
-	*/
-}
-
 // Collsions
 bool OnCollision(Particle particle, SDL_Rect rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
@@ -256,10 +232,10 @@ bool OnCollision(SDL_Rect rect, SDL_Rect rectangle) {
 void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient) {
 	particle.v.x = (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y = -(particle.pos.y - particle.prev_pos.y) / dt;
-	rect.y = 800 - rect.y + rect.h;
+	rect.y = 800 - rect.y;
 
 	//colliding from up
-	if ((particle.pos.y + particle.h < rect.y + rect.h) && (particle.pos.x > rect.x) && (particle.pos.y > rect.y)){
+	if ((particle.pos.y - particle.h < rect.y + rect.h) && (particle.pos.x > rect.x) && (particle.pos.y > rect.y)){
 			particle.v.y = -particle.v.y * bounce_coefficient;
 	}
 

@@ -145,18 +145,10 @@ int main(int argc, char* args[]) {
 					}
 
 					//debug draw
-					dt = SDL_GetTicks();
-					dt -= timer;
-					if (dt > 0)
-					{
-						render.delay = render.cap_miliseconds - dt;
-						SDL_Delay(render.delay);
-					}
 					render.blit_all(projectile.pos, worm, { (float)target.x,(float)target.y }, option, angle);
 					render.DrawQuad(rectangles[4], 0, 0, 255, 255);
 					render.DrawQuad(rectangles[5], 0, 0, 255, 255);
 					SDL_RenderPresent(render.renderer);
-					timer = SDL_GetTicks();
 				}
 
 				//colateral explosion
