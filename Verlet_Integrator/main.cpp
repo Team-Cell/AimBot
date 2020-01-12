@@ -122,7 +122,7 @@ int main(int argc, char* args[]) {
 						if (OnCollision(projectile, rectangles[j])) {
 							if (projectile.weapon->bounce_coefficient != 0)
 							{
-								//HandleCollision(projectile, rectangles[j], physics.dt, projectile.weapon->bounce_coefficient);
+								HandleCollision(projectile, rectangles[j], physics.dt, projectile.weapon->bounce_coefficient);
 							}
 							else
 							{
@@ -139,7 +139,7 @@ int main(int argc, char* args[]) {
 						explosion_rect.x = projectile.pos.x - 45;
 						explosion_rect.y = 790 - projectile.pos.y - 50;
 						render.DrawQuad(explosion_rect, 0, 0, 255, 100);
-						//render.printExplosion(explosion_rect);
+						render.printExplosion(explosion_rect);
 						SDL_RenderPresent(render.renderer);
 						break;
 					}
@@ -164,7 +164,7 @@ int main(int argc, char* args[]) {
 				{
 					explosion_rect.x = projectile.pos.x - 45;
 					explosion_rect.y = 790 - projectile.pos.y - 50;
-					//render.printExplosion(explosion_rect);
+					render.printExplosion(explosion_rect);
 					SDL_RenderPresent(render.renderer);
 
 					if (OnCollision(target, explosion_rect))
@@ -214,7 +214,7 @@ int main(int argc, char* args[]) {
 				}
 			}
 			if (OnCollision(projectile, target)) {
-				//render.printExplosion(explosion_rect);
+				render.printExplosion(explosion_rect);
 				SDL_RenderPresent(render.renderer);
 				audio.PlayFx(1);
 				break;

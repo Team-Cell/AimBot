@@ -254,32 +254,28 @@ bool OnCollision(SDL_Rect rect, SDL_Rect rectangle) {
 }
 
 void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_coefficient) {
-	particle.v.x =    (particle.pos.x - particle.prev_pos.x) / dt;
-	particle.v.y =  - (particle.pos.y - particle.prev_pos.y) / dt;
-	rect.y = 800 - rect.y;
+	particle.v.x = (particle.pos.x - particle.prev_pos.x) / dt;
+	particle.v.y = -(particle.pos.y - particle.prev_pos.y) / dt;
+	rect.y = 800 - rect.y + rect.h;
 
 	//colliding from up
-	if ((particle.pos.y - particle.h < rect.y) && (particle.pos.x > rect.x) && (particle.pos.y < rect.y - rect.h))
-	{
-		particle.v.y = -particle.v.y * bounce_coefficient;
+	if ((particle.pos.y + particle.h < rect.y + rect.h) && (particle.pos.x > rect.x) && (particle.pos.y > rect.y)){
+			particle.v.y = -particle.v.y * bounce_coefficient;
 	}
 
 	//colliding from down
-	if ((particle.pos.y < rect.y - rect.h) && (particle.pos.y < rect.y) && (particle.pos.x > rect.x))
-	{
+	if ((particle.pos.y + particle.h > rect.y - rect.h) && (particle.pos.y < rect.y) && (particle.pos.x > rect.x)) {
 		particle.v.y = -particle.v.y * bounce_coefficient;
 	}
 
 	//colliding from left
-	if ((particle.pos.x + particle.w > rect.x) && (particle.pos.y < rect.y) && (particle.pos.x < rect.x + rect.w))
-	{
-		particle.v.x = -particle.v.x * bounce_coefficient;
+	if ((particle.pos.x + particle.w > rect.x) && (particle.pos.y < rect.y) && (particle.pos.x < rect.x + rect.w)){
+			particle.v.x = -particle.v.x * bounce_coefficient;
 	}
 
 	//colliding from right
-	if ((particle.pos.x > rect.x) && (particle.pos.y < rect.y) && (particle.pos.x < rect.x + rect.w))
-	{
-		particle.v.x = -particle.v.x * bounce_coefficient;
+	if ((particle.pos.x > rect.x) && (particle.pos.y < rect.y) && (particle.pos.x < rect.x + rect.w)){
+			particle.v.x = -particle.v.x * bounce_coefficient;
 	}
 
 	particle.prev_pos.x = particle.pos.x;
@@ -288,5 +284,3 @@ void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_c
 	particle.prev_pos.y = particle.pos.y;
 	particle.pos.y = particle.pos.y - particle.v.y * dt;
 }
-
-
