@@ -218,8 +218,8 @@ float Module(fPoint var) {
 bool OnCollision(Particle particle, SDL_Rect rectangle) {
 	return (particle.pos.x < rectangle.x + rectangle.w &&
 		particle.pos.x + particle.w > rectangle.x &&
-		particle.pos.y < rectangle.y + rectangle.h &&
-		 particle.pos.y + particle.h > rectangle.y);
+		SCREEN_HEIGHT - particle.pos.y < rectangle.y + rectangle.h &&
+		SCREEN_HEIGHT - particle.pos.y + particle.h > rectangle.y);
 }
 
 bool OnCollision(SDL_Rect rect, SDL_Rect rectangle) {
@@ -233,7 +233,7 @@ void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_c
 	particle.v.x = (particle.pos.x - particle.prev_pos.x) / dt;
 	particle.v.y = -(particle.pos.y - particle.prev_pos.y) / dt;
 	fPoint relative_pos = particle.pos;
-	relative_pos.y = 800 - relative_pos.y;
+	relative_pos.y = SCREEN_HEIGHT - relative_pos.y;
 
 	//colliding from up
 	if ((relative_pos.y + particle.h > rect.y) && (relative_pos.x > rect.x) && (relative_pos.y < rect.y + rect.h)){
