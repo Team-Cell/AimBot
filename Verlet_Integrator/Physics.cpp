@@ -48,9 +48,9 @@ PhysicsEngine::~PhysicsEngine()
 }
 
 //main verlet
-fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint a, float dt) {
+fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint a, float dt, float drag_coefficient) {
 
-	pos = pos + (pos - prev_pos) + a * dt * dt;
+	pos = pos + (pos - prev_pos) + a * drag_coefficient * dt * dt;
 
 	return pos;
 }

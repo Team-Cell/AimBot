@@ -117,7 +117,7 @@ int main(int argc, char* args[]) {
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
 					fPoint temp = projectile.pos;
-					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
+					projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt, DRAG_COEFFICIENT);
 					projectile.prev_pos = temp;
 
 					for (int j = 0; j < 6; j++)
@@ -202,7 +202,7 @@ int main(int argc, char* args[]) {
 		for (int i = 0; i < 300; i++)
 		{
 			fPoint temp = projectile.pos;
-			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt);
+			projectile.pos = Verlet_Integration(projectile.pos, projectile.prev_pos, projectile.a, physics.dt, DRAG_COEFFICIENT);
 			projectile.prev_pos = temp;
 
 			for (int j = 0; j < 6; j++)

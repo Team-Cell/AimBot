@@ -90,7 +90,7 @@ public:
 };
 
 //main verlet
-fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint ai, float dt);
+fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint ai, float dt, float drag_coefficient);
 fPoint Velocity_Verlet(fPoint vi, fPoint ai, fPoint a_new, float dt);
 fPoint Stormer_Verlet(fPoint pos, fPoint pos_new, fPoint a, float dt);
 fPoint Verlet_Acceleration(float m, fPoint total_f);
