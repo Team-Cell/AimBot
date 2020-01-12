@@ -102,12 +102,7 @@ fPoint Calculate_Acceleration(fPoint force, float mass);
 fPoint AccelerationSum(Particle particle);
 
 //position calculators 
-<<<<<<< HEAD
-fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool friction, float dt = 1.0f);
-=======
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt = 1.0f);
-void CalculatePath(Particle& projectile, Weapon* chosen_weapon, float& angle, SDL_Rect target, SDL_Rect rectangles[4], PhysicsEngine physics);
->>>>>>> parent of 41f0c6b... Merge branch 'master' of https://github.com/Team-Cell/AimBot
 
 void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
