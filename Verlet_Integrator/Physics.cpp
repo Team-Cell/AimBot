@@ -14,8 +14,7 @@ Particle::Particle() {
 	area = 1;
 	density = 1;
 	dt = 1;
-	mass = 0;
-	drag_coeficient = 0;
+	mass = 400;
 	w = 32;
 	h = 32;
 	weapon = nullptr;
@@ -30,7 +29,7 @@ PhysicsEngine::PhysicsEngine()
 	Montecarlo = 10;
 	Montecarlo_iterations = 0;
 	Max_Montecarlo = 5;
-	max_path_iterations = 60;
+	max_path_iterations = 80;
 
 	min_angle = 0;
 	max_angle = 80;
@@ -47,10 +46,37 @@ PhysicsEngine::~PhysicsEngine()
 {
 }
 
+
+
+//Calculate position with drag
+fPoint CalculatePos(fPoint pos, fPoint prev_pos, fPoint ai, float dt, float area, float mass, float v_projectile, float angle, bool classical_motion){
+	fPoint new_pos = pos;
+	if (classical_motion == true) {
+		new_pos = Classical_Motion(pos, v_projectile, angle, ai);
+	}
+	else {
+		new_pos = Verlet_Integration(pos, prev_pos, ai, dt);
+	}
+	fPoint new_v = Stormer_Verlet(new_pos, pos, ai, dt);
+	float drag_multiplier = 0.5 * AIR_DENSITY * area * DRAG_COEFFICIENT;
+	fPoint Fd = { new_v.x * new_v.x * drag_multiplier,new_v.y * new_v.x * drag_multiplier };
+	fPoint a_drag = { Fd.x / mass,Fd.y / mass };
+	ai -= a_drag;
+
+	if (classical_motion == true) {
+		new_pos = Classical_Motion(pos, v_projectile, angle, ai);
+	}
+	else {
+		new_pos = Verlet_Integration(pos, prev_pos, ai, dt);
+	}
+	return new_pos;
+}
+
 //main verlet
 fPoint Verlet_Integration(fPoint pos, fPoint prev_pos, fPoint a, float dt) {
 
 	pos = pos + (pos - prev_pos) + a * dt * dt;
+
 
 	return pos;
 }
@@ -84,7 +110,6 @@ fPoint Stormer_Verlet(fPoint pos, fPoint prev_pos,fPoint a, float dt) {
 	else {
 		v_new = (pos - prev_pos - a * dt * dt * 0.5) / dt;
 	}
-	cout << "px: " << pos.x << " py: " << pos.y << " vx: " << v_new.x << " vy: " << v_new.y << endl;
 
 	return v_new;
 }
@@ -99,10 +124,10 @@ fPoint Verlet_Acceleration(float m, fPoint total_f) {
 
 //acceleration and velocity
 
-fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass) {
+fPoint DragAcceleration(float density, float area, fPoint speed, float mass) {
 	fPoint acceleration;
-	acceleration.x = ((0.5 * density * drag_coefficient * area) * (speed.x * speed.x)) / mass;
-	acceleration.y = ((0.5 * density * drag_coefficient * area) * (speed.y * speed.y)) / mass;
+	acceleration.x = ((0.5 * density * DRAG_COEFFICIENT * area) * (speed.x * speed.x)) / mass;
+	acceleration.y = ((0.5 * density * DRAG_COEFFICIENT * area) * (speed.y * speed.y)) / mass;
 	return acceleration;
 }
 
@@ -130,8 +155,8 @@ fPoint AccelerationSum(Particle particle) {
 	fPoint accelerationSum;
 	if (particle.density != 0)
 	{
-		accelerationSum.x = DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass).x;
-		accelerationSum.y = particle.gravity + DragAcceleration(particle.density, particle.drag_coeficient, particle.area, particle.v, particle.mass).y;
+		accelerationSum.x = DragAcceleration(particle.density, particle.area, particle.v, particle.mass).x;
+		accelerationSum.y = particle.gravity + DragAcceleration(particle.density, particle.area, particle.v, particle.mass).y;
 		/* +Freefall_Acceleration(particle.gravity, particle.mass, particle.drag_coeficient) /*+ Parachutist_Acceleration(particle.mass, particle.v.y, particle.gravity, particle.k)*/;
 		/*To calculate gravitational acceleration we can use the new function of calculate acceleration with the force being the gravity and the mass the bullet's mass (it could
 		change depending of the weapon used)*/
@@ -162,15 +187,13 @@ float Freefall_Acceleration(float gravity, float m, float friction_const) {
 
 //position calculators
 
-fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, bool gravity, float dt) {
+fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, float dt) {
 	fPoint final_position;
 	fPoint velocity;
 
 	//CONVERT TO ANGLES
 	velocity.x = initial_velocity * cos(angle * PI / 180);
 	velocity.y = initial_velocity * sin(angle * PI / 180);
-
-	if (gravity) velocity.y -= GRAVITY;
 
 	final_position.x = position.x + velocity.x * dt + 0.5f * acceleration.x * dt * dt;
 	final_position.y = position.y + velocity.y * dt + 0.5f * acceleration.y * dt * dt;
@@ -265,3 +288,5 @@ void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_c
 	particle.prev_pos.y = particle.pos.y;
 	particle.pos.y = particle.pos.y - particle.v.y * dt;
 }
+
+
