@@ -191,7 +191,6 @@ int main(int argc, char* args[]) {
 				}
 
 				if (OnCollision(projectile, target, false)) {
-					cout << "Target hit" << endl;
 					physics.final_angle = 0;
 					explosion_rect.x = projectile.pos.x - 45;
 					explosion_rect.y = 790 - projectile.pos.y - 50;
