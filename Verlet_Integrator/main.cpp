@@ -56,7 +56,7 @@ int main(int argc, char* args[]) {
 	audio.Init();
 
 	srand(time(NULL));
-	//audio.PlayMusic("Music/worms.ogg");
+	audio.PlayMusic("Music/worms.ogg");
 	audio.LoadFx("Music/Explosion.wav");
 	audio.LoadFx("Music/Grenade_throwing.wav");
 	audio.LoadFx("Music/Bazooka_throwing.wav");
