@@ -47,7 +47,6 @@ PhysicsEngine::~PhysicsEngine()
 }
 
 
-
 //Calculate position with drag
 fPoint CalculatePos(fPoint pos, fPoint prev_pos, fPoint ai, float dt, float area, float mass, float v_projectile, float angle, bool classical_motion){
 	fPoint new_pos = pos;
@@ -208,12 +207,6 @@ fPoint Forces_Sum(fPoint f1, fPoint f2) {
 	return total_f;
 }
 
-float Module(fPoint var) {
-
-	return sqrt(var.x * var.x + var.y * var.y);
-
-}
-
 // Collsions
 bool OnCollision(Particle particle, SDL_Rect rectangle, bool flip_y) {
 	if (flip_y == true) {
@@ -269,3 +262,4 @@ void HandleCollision(Particle& particle, SDL_Rect rect, float dt, float bounce_c
 	particle.prev_pos.y = particle.pos.y;
 	particle.pos.y = particle.pos.y - particle.v.y * dt;
 }
+

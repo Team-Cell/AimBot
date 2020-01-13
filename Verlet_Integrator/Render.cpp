@@ -199,22 +199,7 @@ void Render::blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_play
 	}
 
 	////////// RENDER //////////////
-	//SDL_RenderPresent(renderer);
-}
-
-void Render::Update(fPoint position) {
-	
-	SDL_RenderCopy(renderer, texbackground, &(background_animation.GetCurrentFrame()), &backgroundrect);
-	particle_rect.x = position.x;
-	particle_rect.y = position.y;
-	
-	SDL_RenderCopy(renderer, particle_tex, NULL, &particle_rect);
 	SDL_RenderPresent(renderer);
-}
-
-void Render::clearScreen() {
-	SDL_RenderClear(renderer);
-	SDL_RenderCopy(renderer, texbackground, NULL, &backgroundrect);
 }
 
 bool Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) const

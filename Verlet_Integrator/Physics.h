@@ -24,23 +24,6 @@ struct Weapon {
 	}
 };
 
-struct Collider {
-	float x = 0;
-	float y = 0;
-	float w = 0;
-	float h = 0;
-
-	Collider(){};
-	~Collider() {};
-
-	Collider(float u_x, float u_y, float u_w, float u_h){
-		x = u_x;
-		y = u_y;
-		w = u_w;
-		h = u_h;
-	}
-};
-
 class Particle{
 public:
 	Particle();
@@ -99,15 +82,12 @@ fPoint Stormer_Verlet(fPoint pos, fPoint pos_new, fPoint a, float dt);
 fPoint Verlet_Acceleration(float m, fPoint total_f);
 
 //acceleration and velocity
-fPoint DragAcceleration(float density, float drag_coefficient, float area, fPoint speed, float mass);
 fPoint Calculate_Acceleration(fPoint vi, fPoint vf, float dt);
 fPoint Calculate_Acceleration(fPoint force, float mass);
 fPoint AccelerationSum(Particle particle);
 
 //position calculators 
 fPoint Classical_Motion(fPoint position, float initial_velocity, float angle, fPoint acceleration, float dt = 1.0f);
-
-void Physics(float tf, int fps, float dt, float gravity, float mass, fPoint v, fPoint wind, float density);
 
 //collisions
 bool OnCollision(Particle particle, SDL_Rect rectangle, bool flip_y = true);
@@ -116,7 +96,6 @@ bool OnCollision(SDL_Rect projectile, SDL_Rect target);
 
 //additional formulas
 fPoint Forces_Sum(fPoint f1, fPoint f2);
-float Module(fPoint var);
 
 #endif // !_PHYSICS_H_
 

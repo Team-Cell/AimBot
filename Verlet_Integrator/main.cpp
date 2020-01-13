@@ -35,7 +35,7 @@ int main(int argc, char* args[]) {
 	float timer = 0;
 	float dt = 0;
 
-	Weapon Grenade(20, 0.6, false, true);
+	Weapon Grenade(20, 0.4, false, true);
 	Weapon Bazooka(30, 0, true, false);
 
 	//screen limit rectangles
@@ -109,7 +109,6 @@ int main(int argc, char* args[]) {
 				projectile.prev_pos.y = worm.y - 30;
 
 				projectile.pos = CalculatePos(projectile.prev_pos, { 0,0 }, projectile.a, 1.0, projectile.area,projectile.mass,	projectile.weapon->initial_speed, angle, true);
-				timer = SDL_GetTicks();
 
 				for (int i = 0; i < physics.max_path_iterations; i++)
 				{
@@ -136,19 +135,8 @@ int main(int argc, char* args[]) {
 						physics.final_angle = angle;
 						physics.final_speed = projectile.weapon->initial_speed;
 						i++;
-						explosion_rect.x = projectile.pos.x - 45;
-						explosion_rect.y = 790 - projectile.pos.y - 50;
-						render.DrawQuad(explosion_rect, 0, 0, 255, 100);
-						audio.PlayFx(1);
-						render.printExplosion(explosion_rect, true);
 						break;
 					}
-
-					//debug draw
-					render.blit_all(projectile.pos, worm, { (float)target.x,(float)target.y }, option, angle);
-					render.DrawQuad(rectangles[4], 0, 0, 255, 255);
-					render.DrawQuad(rectangles[5], 0, 0, 255, 255);
-					SDL_RenderPresent(render.renderer);
 				}
 
 				//colateral explosion
@@ -156,10 +144,8 @@ int main(int argc, char* args[]) {
 				{
 					explosion_rect.x = projectile.pos.x - 45;
 					explosion_rect.y = 790 - projectile.pos.y - 50;
-					audio.PlayFx(1);
-					render.printExplosion(explosion_rect, false);
 
-					if (OnCollision(target, explosion_rect))
+					if (OnCollision({target.x, target.y}, explosion_rect))
 					{
 						cout << "Target hit by explosion" << endl;
 						physics.final_angle = angle;
@@ -184,8 +170,7 @@ int main(int argc, char* args[]) {
 
 		projectile.pos = CalculatePos(projectile.prev_pos, { 0,0 }, projectile.a, 1.0, projectile.area, projectile.mass, projectile.weapon->initial_speed, angle, true);
 
-		timer = SDL_GetTicks();
-		for (int i = 0; i < 300; i++)
+		for (int i = 0; i < 300 && physics.final_angle != 0; i++)
 		{
 			fPoint temp = projectile.pos;
 			projectile.pos = CalculatePos(projectile.pos, projectile.prev_pos, projectile.a, physics.dt, projectile.area, projectile.mass);
@@ -204,24 +189,26 @@ int main(int argc, char* args[]) {
 						break;
 					}
 				}
+
+				if (OnCollision(projectile, target, false)) {
+					cout << "Target hit" << endl;
+					physics.final_angle = 0;
+					explosion_rect.x = projectile.pos.x - 45;
+					explosion_rect.y = 790 - projectile.pos.y - 50;
+					audio.PlayFx(1);
+					render.printExplosion(explosion_rect, true);
+					i++;
+					break;
+				}
 			}
 
-			dt = SDL_GetTicks();
-			dt -= timer;
-			if (dt > 0)
-			{
-				render.delay = render.cap_miliseconds - dt;
-				SDL_Delay(render.delay);
-			}
 			render.blit_all(projectile.pos, worm, {(float)target.x, (float)target.y}, option, physics.final_angle);
-			timer = SDL_GetTicks();
 		}
 
 		cout << endl;
 		physics.Montecarlo_iterations = 0;
 		physics.final_angle = 0;
 		option = 0;
-		render.clearScreen();
 	}
 
 	system("pause");

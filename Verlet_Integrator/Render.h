@@ -21,8 +21,6 @@ public:
 	void Init();
 	void blit_all(fPoint pos_proyectile, fPoint pos_player1, fPoint pos_player2, int actual_weapon, float angle);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a) const;
-	void Update(fPoint pos);
-	void clearScreen();
 	void printExplosion(SDL_Rect& explosionrect, bool destroy_enemy);
 	SDL_Point center;
 
@@ -31,7 +29,6 @@ public:
 	float framerate_cap;
 	float cap_miliseconds;
 	float delay;
-	//SDL_Renderer *renderer;
 	Animation background_animation;
 	Animation idle_animation;
 	Animation explosion_animation;
